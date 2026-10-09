@@ -457,7 +457,7 @@ document.documentElement.classList.add("js");
    Each team can take a logo (URL or data: URI). Each gallery item can take a src (photo or video) and a poster (video).
 ================================================ */
 var HEADSHOT_SRC = "images/headshot.webp";
-var CONTACT_ENDPOINT = "";
+var CONTACT_ENDPOINT = "https://formspree.io/f/xvkzroyr";
 /* Your email address. Until a form service is connected, "Send message" opens the visitor's email app with their message filled in. */
 var CONTACT_EMAIL = "";
 /* true = videos play inside the site (works once self-hosted). false = viewer links out to YouTube. */
@@ -1084,6 +1084,7 @@ function bindForm(){
       return;
     }
     if(!CONTACT_ENDPOINT){ showSent(f, data, false); return; }
+    data._subject = "Portfolio inquiry from " + data.name + (data.need ? " (" + data.need + ")" : "");
     btn.disabled = true; status.textContent = "Sending your message\u2026";
     fetch(CONTACT_ENDPOINT, {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body:JSON.stringify(data)})
       .then(function(r){ if(!r.ok) throw new Error("bad status"); showSent(f, data, true); })
