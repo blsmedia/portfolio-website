@@ -358,6 +358,33 @@ a{color:inherit}
 .lb-frame.fit{aspect-ratio:auto;max-height:none;display:grid;place-items:center;background:transparent;clip-path:none;overflow:visible}
 .lb-frame.fit > img{width:auto;max-width:100%;height:auto;max-height:76dvh;background:none;clip-path:var(--cut-lg)}
 
+
+/* ---------- Organization page sections ---------- */
+.gal-sections{display:grid;gap:clamp(64px,8vw,96px)}
+.gsec{scroll-margin-top:96px}
+.gsec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px}
+.gsec-head h2{margin:0;font:600 clamp(22px,2.4vw,28px)/1.2 var(--display)}
+.gsec-count{font:500 14px/1 var(--body);color:var(--ivory-62)}
+.more-row{margin-top:26px}
+.btn-quiet{--fill:var(--surface)}
+.btn-quiet:hover,.btn-quiet:focus-visible{--fill:var(--steel)}
+.more-count{display:inline-grid;place-items:center;min-width:26px;height:22px;padding:0 6px;font:600 12px/1 var(--body);color:var(--ivory-85);background:rgba(12,12,14,.45)}
+
+
+/* ---------- Video credits, YouTube tiles, More rails ---------- */
+.tile-credit{display:block;margin-top:4px;font:500 13px/1.3 var(--body);color:var(--ivory-62)}
+.tile-frame.yt{aspect-ratio:16/9}
+.tile-frame.yt > img{height:100%;object-fit:cover}
+.tile-frame.yt.noimg{background:radial-gradient(120% 120% at 30% 20%,#33333a 0%,var(--surface) 60%)}
+.rail.real{grid-auto-columns:max-content}
+.rail .tile.m{aspect-ratio:auto;width:auto;text-align:left;scroll-snap-align:start}
+.rail .tile.m .tile-frame > img{height:clamp(280px,32vw,420px);width:auto;max-width:none}
+.lb-frame.yt{aspect-ratio:16/9}
+.lb-frame > iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-out{position:absolute;inset:0;display:grid;place-items:center;background:#000}
+.yt-out > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+.yt-out .btn{position:relative}
+
 /* ---------- Lightbox ---------- */
 #lb{padding:0;border:0;background:transparent;color:var(--ivory);width:min(1100px,calc(100vw - 32px));max-width:none;max-height:calc(100dvh - 32px);overflow:visible}
 #lb::backdrop{background:rgba(12,12,14,.9);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
@@ -429,6 +456,10 @@ document.documentElement.classList.add("js");
 ================================================ */
 var HEADSHOT_SRC = "images/headshot.webp";
 var CONTACT_ENDPOINT = "";
+/* Your email address. Until a form service is connected, "Send message" opens the visitor's email app with their message filled in. */
+var CONTACT_EMAIL = "";
+/* true = videos play inside the site (works once self-hosted). false = viewer links out to YouTube. */
+var EMBED_VIDEO = true;
 /* Paste your profile links. icon: optional official icon file (URL or data: URI). */
 var SOCIAL = [
   {label:"Instagram", url:"https://www.instagram.com/", icon:""},
@@ -448,7 +479,7 @@ var TEAMS = [
    blurb:"Running communications for the Bisons: social graphics, video, photography and the announcements fans see first."},
   {slug:"more",     name:"More", mono:"", color:"#3A68B0", logo:"",
    role:"Other organizations and personal projects",
-   blurb:"Work for the Okotoks Oilers, Mountainview Colts, Woodys RV, Country Rose Homes and more, plus my own personal projects."}
+   blurb:"Work for Woody's RV World, the Okotoks Oilers, Mavericks Elite Lacrosse Club and the Heritage Junior Hockey League, plus volunteer work for the Three Angels Poker Chip Run."}
 ];
 
 var SERVICES = [
@@ -468,53 +499,138 @@ var SERVICES = [
 
 var T = {tigers:"Medicine Hat Tigers", bulldogs:"Blackfalds Bulldogs", bisons:"Okotoks Bisons", oilers:"Okotoks Oilers", colts:"Mountainview Colts"};
 function p(title, club, src){ return {kind:"photo", title:title, club:club||"", src:src||""}; }
+function g(title, club, src){ return {kind:"photo", cat:"graphic", title:title, club:club||"", src:src||""}; }
 function v(title, club, src, poster){ return {kind:"video", title:title, club:club||"", src:src||"", poster:poster||""}; }
 /* img("bulldogs/home-opener") -> images/bulldogs/home-opener.webp
    img("tigers/new-graphic.jpg") -> images/tigers/new-graphic.jpg  (any file type works if you include the extension) */
 function img(k){ return "images/" + (/\.[a-z0-9]+$/i.test(k) ? k : k + ".webp"); }
+/* Credit labels for videos. Use a key below, or write your own text in quotes. */
+var CREDIT = {
+  "shot-edited": "Shot & edited",
+  "edited": "Edited",
+  "edited-some-shot": "Edited, some footage shot"
+};
+/* y(title, club, youtubeId, credit, thumbnail) -> a YouTube video. Thumbnail is optional (YouTube's is used if left out). */
+function y(title, club, id, credit, poster){
+  return {kind:"video", title:title, club:club||"", yt:id, credit:CREDIT[credit]||credit||"",
+          poster:poster||("https://i.ytimg.com/vi/"+id+"/hqdefault.jpg"), ytThumb:!poster};
+}
 
 var GALLERY = {
-  "org:tigers":   [p("Home opener starting lineup"), v("Playoff hype video"), p("Final score graphic"), p("Player of the game"), v("Warmup cam"), p("Schedule release"), p("Community night at the rink"), v("Post-game interview")],
-  "org:bulldogs": [
-    p("Alumni spotlight: Team Canada", "", img("bulldogs/alumni-spotlight")),
-    p("Exhibition schedule", "", img("bulldogs/exhibition-schedule")),
-    p("Player birthday", "", img("bulldogs/birthday")),
-    p("Monthly schedule: January", "", img("bulldogs/january-schedule")),
-    p("Home opener", "", img("bulldogs/home-opener")),
-    p("Player signing", "", img("bulldogs/signed")),
-    p("Milestone: 150 games played", "", img("bulldogs/milestone-150")),
-    p("Canada Day", "", img("bulldogs/canada-day")),
-    p("Game day (home)", "", img("bulldogs/gameday-home")),
-    p("Game day (away)", "", img("bulldogs/gameday-away")),
-    p("Final score: home win", "", img("bulldogs/final-win-home")),
-    p("Final score: road win", "", img("bulldogs/final-win-away")),
-    p("3 Stars (home)", "", img("bulldogs/3-stars-home")),
-    p("3 Stars (away)", "", img("bulldogs/3-stars-away")),
-    p("Game summary (home)", "", img("bulldogs/summary-home")),
-    p("Game summary (away)", "", img("bulldogs/summary-away")),
-    p("Milestone: 100 games played", "", img("bulldogs/milestone-100")),
-    p("Point streak", "", img("bulldogs/point-streak")),
-    p("Goalie win streak", "", img("bulldogs/win-streak")),
-    p("Theme night: College Night", "", img("bulldogs/college-night")),
-    p("Season thank you", "", img("bulldogs/thank-you")),
-    p("Monthly schedule: February", "", img("bulldogs/monthly-schedule")),
-    p("Theme night schedule", "", img("bulldogs/theme-night-schedule")),
-    p("Theme nights this month", "", img("bulldogs/theme-nights-month"))
+  "org:tigers": [
+    g("Central Division champions", "", img("tigers/central-division-champions")),
+    g("Player of the Year", "", img("tigers/player-of-the-year")),
+    g("Draft day", "", img("tigers/draft-day")),
+    g("Playoffs clinched", "", img("tigers/playoffs-clinched")),
+    g("Defenceman of the Year", "", img("tigers/defenceman-of-the-year")),
+    g("33 goals: team & modern WHL record", "", img("tigers/33-goals-record")),
+    g("NHL debut", "", img("tigers/nhl-debut")),
+    g("Drafted", "", img("tigers/drafted")),
+    g("Tigers in the rankings", "", img("tigers/tigers-in-the-rankings")),
+    g("Trade alert", "", img("tigers/trade-alert")),
+    g("2,000 franchise wins", "", img("tigers/2000-franchise-wins")),
+    g("WHL Opening Week", "", img("tigers/whl-opening-week")),
+    g("Team Finland selection", "", img("tigers/team-finland")),
+    g("Team Canada selection", "", img("tigers/team-canada-u17")),
+    g("Milestone: 100 career games", "", img("tigers/100-career-games")),
+    g("Graduating player thank you", "", img("tigers/graduating-thank-you")),
+    g("32 goals: record tied", "", img("tigers/32-goals-record-tied")),
+    g("One more day", "", img("tigers/one-more-day")),
+    g("Single game tickets", "", img("tigers/single-game-tickets")),
+    g("Online auction", "", img("tigers/online-auction")),
+    p("Tunnel: goalie stretch", "", img("tigers/tunnel-goalie-stretch")),
+    p("Pre-game portrait", "", img("tigers/pregame-portrait")),
+    p("Tunnel walk", "", img("tigers/tunnel-walk")),
+    p("Goalie water spray", "", img("tigers/goalie-water-spray")),
+    p("Warmup: puck flip", "", img("tigers/warmup-puck-flip")),
+    p("Goalie at the bench", "", img("tigers/goalie-at-the-bench")),
+    p("Warmup: Bryzgalov", "", img("tigers/warmup-bryzgalov")),
+    p("Mask detail", "", img("tigers/mask-detail")),
+    p("Walkout high-fives", "", img("tigers/walkout-high-fives")),
+    p("Warmup: Pickford", "", img("tigers/warmup-pickford")),
+    p("Warmup", "", img("tigers/warmup")),
+    y("2026 playoff hype video: Round 1", "", "npiEUs-_MR8", "")
   ],
-  "org:bisons":   [p("Home game graphic"), v("Highlight package"), p("Commitment announcement"), p("Game action"), p("Community skate"), p("Weekly schedule"), v("Behind the bench"), p("Milestone graphic")],
-  "service:graphic-design": [p("Final score graphic", T.tigers), p("Game day graphic", T.bisons), p("Roster announcement", T.bulldogs), p("Schedule release", T.tigers), p("Player spotlight", T.bulldogs), p("Commitment announcement", T.bisons), p("Roster card", T.colts), p("Game day graphic", T.oilers)],
-  "service:videography":    [v("Playoff hype video", T.tigers), v("Highlight package", T.bisons), v("Weekend recap", T.bulldogs), v("Warmup cam", T.tigers), v("Behind the bench", T.bisons), v("Season ticket promo", T.bulldogs), v("Tournament recap", T.colts), v("Post-game interview", T.tigers)],
-  "service:photography":    [p("Home opener starting lineup", T.tigers), p("Game action", T.bisons), p("Goal celebration", T.bulldogs), p("Community night at the rink", T.tigers), p("Community skate", T.bisons), p("Home game atmosphere", T.bulldogs), p("Team photo day", T.colts), p("Awards night", T.oilers)],
+  "org:bulldogs": [
+    g("Alumni spotlight: Team Canada", "", img("bulldogs/alumni-spotlight")),
+    g("Exhibition schedule", "", img("bulldogs/exhibition-schedule")),
+    g("Player birthday", "", img("bulldogs/birthday")),
+    g("Monthly schedule: January", "", img("bulldogs/january-schedule")),
+    g("Home opener", "", img("bulldogs/home-opener")),
+    g("Player signing", "", img("bulldogs/signed")),
+    g("Milestone: 150 games played", "", img("bulldogs/milestone-150")),
+    g("Canada Day", "", img("bulldogs/canada-day")),
+    g("Game day (home)", "", img("bulldogs/gameday-home")),
+    g("Game day (away)", "", img("bulldogs/gameday-away")),
+    g("Final score: home win", "", img("bulldogs/final-win-home")),
+    g("Final score: road win", "", img("bulldogs/final-win-away")),
+    g("3 Stars (home)", "", img("bulldogs/3-stars-home")),
+    g("3 Stars (away)", "", img("bulldogs/3-stars-away")),
+    g("Game summary (home)", "", img("bulldogs/summary-home")),
+    g("Game summary (away)", "", img("bulldogs/summary-away")),
+    g("Milestone: 100 games played", "", img("bulldogs/milestone-100")),
+    g("Point streak", "", img("bulldogs/point-streak")),
+    g("Goalie win streak", "", img("bulldogs/win-streak")),
+    g("Theme night: College Night", "", img("bulldogs/college-night")),
+    g("Season thank you", "", img("bulldogs/thank-you")),
+    g("Monthly schedule: February", "", img("bulldogs/monthly-schedule")),
+    g("Theme night schedule", "", img("bulldogs/theme-night-schedule")),
+    g("Theme nights this month", "", img("bulldogs/theme-nights-month"))
+  ],
+  "org:bisons": [
+    g("2024 Hockey Alberta provincial champions", "", img("bisons/provincial-champions")),
+    g("Back to back to back HJHL champions", "", img("bisons/three-peat-champions")),
+    g("Bisons vs Generals: a historic rivalry", "", img("bisons/bisons-vs-generals")),
+    g("Milestone: 50 points", "", img("bisons/50-points"))
+  ],
+  "service:graphic-design": [
+    g("Central Division champions", T.tigers, img("tigers/central-division-champions")),
+    g("Player of the Year", T.tigers, img("tigers/player-of-the-year")),
+    g("Draft day", T.tigers, img("tigers/draft-day")),
+    g("Playoffs clinched", T.tigers, img("tigers/playoffs-clinched")),
+    g("Defenceman of the Year", T.tigers, img("tigers/defenceman-of-the-year")),
+    g("33 goals: team & modern WHL record", T.tigers, img("tigers/33-goals-record")),
+    g("NHL debut", T.tigers, img("tigers/nhl-debut")),
+    g("Drafted", T.tigers, img("tigers/drafted")),
+    g("Tigers in the rankings", T.tigers, img("tigers/tigers-in-the-rankings")),
+    g("Trade alert", T.tigers, img("tigers/trade-alert")),
+    g("2,000 franchise wins", T.tigers, img("tigers/2000-franchise-wins")),
+    g("WHL Opening Week", T.tigers, img("tigers/whl-opening-week")),
+    g("Team Finland selection", T.tigers, img("tigers/team-finland")),
+    g("Team Canada selection", T.tigers, img("tigers/team-canada-u17")),
+    g("Milestone: 100 career games", T.tigers, img("tigers/100-career-games")),
+    g("Graduating player thank you", T.tigers, img("tigers/graduating-thank-you")),
+    g("32 goals: record tied", T.tigers, img("tigers/32-goals-record-tied")),
+    g("One more day", T.tigers, img("tigers/one-more-day")),
+    g("Single game tickets", T.tigers, img("tigers/single-game-tickets")),
+    g("Online auction", T.tigers, img("tigers/online-auction"))
+  ],
+  "service:videography": [
+    y("2026 playoff hype video: Round 1", T.tigers, "npiEUs-_MR8", "")
+  ],
+  "service:photography": [
+    p("Tunnel: goalie stretch", T.tigers, img("tigers/tunnel-goalie-stretch")),
+    p("Pre-game portrait", T.tigers, img("tigers/pregame-portrait")),
+    p("Tunnel walk", T.tigers, img("tigers/tunnel-walk")),
+    p("Goalie water spray", T.tigers, img("tigers/goalie-water-spray")),
+    p("Warmup: puck flip", T.tigers, img("tigers/warmup-puck-flip")),
+    p("Goalie at the bench", T.tigers, img("tigers/goalie-at-the-bench")),
+    p("Warmup: Bryzgalov", T.tigers, img("tigers/warmup-bryzgalov")),
+    p("Mask detail", T.tigers, img("tigers/mask-detail")),
+    p("Walkout high-fives", T.tigers, img("tigers/walkout-high-fives")),
+    p("Warmup: Pickford", T.tigers, img("tigers/warmup-pickford")),
+    p("Warmup", T.tigers, img("tigers/warmup"))
+  ],
   "service:other":          [p("Game notes", T.tigers), p("Press release", T.bisons), p("Community event", T.tigers), p("Media guide", T.tigers), p("Stats package", T.tigers), p("Sponsor spotlight", T.oilers), p("Event poster"), v("Behind the scenes", T.bisons)]
 };
 
 /* "More" page: one section per organization, each a single scrollable row. */
 var MORE = [
-  {name:"Okotoks Oilers",      items:[p("Game day graphic"), v("Season opener hype"), p("Roster announcement"), p("Final score graphic"), p("Game action")]},
-  {name:"Mountainview Colts",  items:[p("Roster card"), v("Tournament recap"), p("Team photo day"), p("Schedule release")]},
-  {name:"Woodys RV",           items:[p("Social campaign"), v("Promo video"), p("Product photography"), p("Event graphic")]},
-  {name:"Country Rose Homes",  items:[p("Listing photography"), v("Home tour video"), p("Social graphics"), p("Open house promo")]},
-  {name:"Personal projects",   items:[p("Concept poster"), p("Design experiment"), v("Short film")]}
+  {name:"Woody's RV World", items:[g("RV Business Top 50 Dealer Awards application", "", img("more/woodys-rv-awards"))]},
+  {name:"Okotoks Oilers", items:[g("Playoffs: Game 1", "", img("more/oilers-playoffs-game-1"))]},
+  {name:"Mavericks Elite Lacrosse Club", items:[g("Milestone: 100 career points", "", img("more/mavericks-100-points"))]},
+  {name:"Heritage Junior Hockey League", items:[g("39th season kickoff", "", img("more/hjhl-39th-season"))]},
+  {name:"Three Angels Poker Chip Run", note:"Volunteer work", items:[g("Event poster", "", img("more/three-angels-poker-run"))]}
 ];
 
 var PATTERN = ["lg","sm","sm","md","md","md","wd","wd"];
@@ -608,7 +724,9 @@ var ROLES = '<dl class="roles">'+
   '<div><dt>Tools</dt><dd>Adobe Creative Cloud, DaVinci Resolve</dd></div></dl>';
 
 function socials(){
-  return '<div class="socials">'+SOCIAL.map(function(x){
+  var real = SOCIAL.filter(function(x){ return x.url && !/^https?:\/\/[^\/]+\/?$/.test(x.url); });
+  if(!real.length) return "";
+  return '<div class="socials">'+real.map(function(x){
     return '<a class="social" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+
       (x.icon ? '<img src="'+esc(x.icon)+'" alt="">' : '')+esc(x.label)+ic("out")+
       '<span class="sr-only"> (opens in a new tab)</span></a>';
@@ -625,14 +743,6 @@ function homeHTML(){
       '<h1 class="hero-name"><span class="line"><span style="--d:80ms">Brandon</span></span><span class="line"><span style="--d:190ms">Schinnour</span></span></h1>'+
       '<span class="wordmark">BLS MEDIA</span>'+
       '<div class="hero-actions"><button type="button" class="btn" data-goto="examples">See my work '+ic("arrow")+'</button><button type="button" class="link-btn" data-goto="contact">Get in touch</button></div>'+
-    '</div>'+
-  '</section>'+
-
-  '<section class="intro wrap" aria-label="About my work">'+
-    '<p class="intro-tag reveal">I build the graphics a franchise stakes its name on.</p>'+
-    '<div class="intro-body reveal" style="--d:120ms">'+
-      '<p>Sports graphic design &amp; communications &mdash; with the same energy the game has, and the same care an organization that size deserves.</p>'+
-      '<p>Expect game-day graphics, player features, hype video and photography, built to deadline and ready to post. Every piece starts from the team&rsquo;s brand, not mine.</p>'+
     '</div>'+
   '</section>'+
 
@@ -653,7 +763,6 @@ function homeHTML(){
       '<div class="about-photo reveal">'+headshot(false)+'</div>'+
       '<div class="about-copy reveal" style="--d:120ms">'+
         '<h2 id="about-h">About</h2>'+
-        '<p class="lede">The teams and players are the story. My job is the frame.</p>'+
         '<p>I&rsquo;m Brandon Schinnour, a sports graphic designer and communications professional working in Alberta junior hockey. I run communications for the Medicine Hat Tigers of the WHL and the CARSTAR Okotoks Bisons, handle digital marketing for the Blackfalds Bulldogs, and take on design work through my studio, BLS Media.</p>'+
         '<p>Day to day that means graphics, video and photography for social, game notes and stats for the press box, and press releases and community events off the ice. Every deliverable ships on the game&rsquo;s schedule, not mine.</p>'+
         ROLES+socials()+
@@ -717,16 +826,16 @@ function subHTML(kind, slug){
 }
 
 /* ================= Gallery ================= */
-var gal = {items:[], filter:"all", showClub:false, list:[]};
+var gal = {items:[], filter:"all", showClub:false, list:[], open:{}, seen:{}, sectioned:false};
 
 function masonryTile(item, i){
   var src = item.kind==="photo" ? item.src : item.poster;
   var kindLabel = item.kind==="video" ? "video" : "image";
   var club = gal.showClub && item.club ? '<span class="tile-club">'+esc(item.club)+'</span>' : "";
   return '<button type="button" class="tile m reveal" style="--d:'+((i%4)*60)+'ms" data-i="'+i+'" aria-label="'+esc(item.title)+(item.club?", "+esc(item.club):"")+', '+kindLabel+'. Open viewer">'+
-    '<span class="tile-frame">'+(src ? '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async">' : '<span class="ph">'+ic(item.kind)+'</span>')+
+    '<span class="tile-frame'+(item.yt ? ' yt' : '')+'">'+(src ? '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async">' : '<span class="ph">'+ic(item.kind)+'</span>')+
     (item.kind==="video" ? '<span class="play-btn">'+ic("play")+'</span>' : '')+'</span>'+
-    '<span class="tile-meta"><span class="tile-title">'+esc(item.title)+'</span>'+club+'</span></button>';
+    '<span class="tile-meta"><span class="tile-title">'+esc(item.title)+'</span>'+club+(item.credit ? '<span class="tile-credit">'+esc(item.credit)+'</span>' : '')+'</span></button>';
 }
 function tileHTML(item, i){
   if(gal.masonry) return masonryTile(item, i);
@@ -745,12 +854,13 @@ function tileHTML(item, i){
     '</span></button>';
 }
 
+function catOf(x){ return x.kind==="video" ? "video" : (x.cat==="graphic" ? "graphic" : "photo"); }
 function renderFilters(){
-  var counts = {all:gal.items.length, photo:0, video:0};
-  gal.items.forEach(function(x){ counts[x.kind]++; });
-  var opts = [["all","All"],["photo","Images"],["video","Videos"]];
+  var counts = {all:gal.items.length, graphic:0, photo:0, video:0};
+  gal.items.forEach(function(x){ counts[catOf(x)]++; });
+  var opts = [["all","All"],["graphic","Graphics"],["photo","Photos"],["video","Videos"]].filter(function(o){ return o[0]==="all" || counts[o[0]] > 0; });
   var fEl = document.getElementById("filters");
-  fEl.hidden = counts.photo===0 || counts.video===0;
+  fEl.hidden = opts.length < 3;
   fEl.innerHTML = opts.map(function(o){
     return '<button type="button" class="filter" data-filter="'+o[0]+'" aria-pressed="'+(gal.filter===o[0])+'">'+o[1]+'<span class="count">'+counts[o[0]]+'</span></button>';
   }).join("");
@@ -758,11 +868,12 @@ function renderFilters(){
 
 function masonryCols(){ var w = window.innerWidth; return w > 1100 ? 4 : w > 720 ? 3 : 2; }
 window.addEventListener("resize", function(){
-  if(gal.masonry && document.getElementById("gallery") && masonryCols() !== gal.cols) renderGrid();
+  if(!document.getElementById("gallery") || masonryCols() === gal.cols) return;
+  if(gal.sectioned) renderSections(); else if(gal.masonry) renderGrid();
 });
 function renderGrid(){
   var g = document.getElementById("gallery");
-  gal.list = gal.filter==="all" ? gal.items.slice() : gal.items.filter(function(x){ return x.kind===gal.filter; });
+  gal.list = gal.filter==="all" ? gal.items.slice() : gal.items.filter(function(x){ return catOf(x)===gal.filter; });
   gal.masonry = gal.list.length > 0 && gal.list.every(function(x){ return x.kind==="photo" ? !!x.src : !!x.poster; });
   g.classList.toggle("masonry", gal.masonry);
   if(gal.masonry){
@@ -775,14 +886,17 @@ function renderGrid(){
     return;
   }
   g.innerHTML = gal.list.length ? gal.list.map(tileHTML).join("") :
-    '<p class="gal-empty">No '+(gal.filter==="video"?"videos":"images")+' in this collection yet.</p>';
+    '<p class="gal-empty">'+(gal.filter==="all" ? 'More examples coming soon.' : 'No '+({video:"videos",graphic:"graphics",photo:"photos"}[gal.filter]||"pieces")+' in this collection yet.')+'</p>';
   observeReveals(g);
 }
 
 function bindGallery(kind, slug){
-  gal.items = GALLERY[kind+":"+slug] || [];
+  gal.items = (GALLERY[kind+":"+slug] || []).filter(isReal);
+  var note = document.querySelector(".gal-note"); if(note) note.hidden = !gal.items.length;
   gal.filter = "all";
   gal.showClub = kind==="service";
+  gal.sectioned = false;
+  if(kind==="org" && gal.items.length && gal.items.every(isReal)){ bindSections(); return; }
   renderFilters(); renderGrid();
   document.getElementById("filters").addEventListener("click", function(e){
     var b = e.target.closest("[data-filter]"); if(!b) return;
@@ -797,19 +911,72 @@ function bindGallery(kind, slug){
 }
 
 
+/* ================= Organization pages: one section per discipline ================= */
+var SECTIONS = [["graphic","Graphic design"],["photo","Photography"],["video","Videography"]];
+function isReal(x){ return x.kind==="photo" ? !!x.src : !!x.poster; }
+function renderSections(focusCat){
+  var g = document.getElementById("gallery"), n = masonryCols();
+  gal.cols = n;
+  g.className = "gal-sections";
+  g.innerHTML = SECTIONS.map(function(sd){
+    var c = sd[0], items = gal.items.filter(function(x){ return catOf(x)===c; });
+    if(!items.length) return "";
+    var open = !!gal.open[c], shown = open ? items : items.slice(0, n), cols = [];
+    for(var k=0;k<n;k++) cols.push([]);
+    shown.forEach(function(it, i){ cols[i % n].push(masonryTile(it, i)); });
+    var extra = items.length - n;
+    return '<section class="gsec" data-cat="'+c+'" id="gsec-'+c+'" aria-labelledby="gsec-'+c+'-h">'+
+      '<div class="gsec-head reveal"><h2 id="gsec-'+c+'-h">'+sd[1]+'</h2><span class="gsec-count">'+items.length+' piece'+(items.length===1?'':'s')+'</span></div>'+
+      '<div class="gallery masonry">'+cols.map(function(col){ return '<div class="mcol">'+col.join("")+'</div>'; }).join("")+'</div>'+
+      (extra > 0 ? '<div class="more-row"><button type="button" class="btn btn-quiet more-btn" data-cat="'+c+'" aria-expanded="'+open+'" aria-controls="gsec-'+c+'">'+
+        (open ? 'Show less' : 'Load more <span class="more-count">'+extra+'</span>')+'</button></div>' : '')+
+    '</section>';
+  }).join("");
+  // tiles that were already on screen shouldn't fade in again
+  g.querySelectorAll(".gsec").forEach(function(sec){
+    var head = sec.querySelector(".gsec-head");
+    if(gal.seen[sec.getAttribute("data-cat")]){ head.classList.add("in"); sec.querySelectorAll(".tile").forEach(function(t){ if(+t.getAttribute("data-i") < n) t.classList.add("in"); }); }
+  });
+  observeReveals(g);
+  if(focusCat){ var b = g.querySelector('.more-btn[data-cat="'+focusCat+'"]'); if(b) b.focus({preventScroll:true}); }
+}
+function bindSections(){
+  gal.open = {}; gal.seen = {}; gal.sectioned = true;
+  document.getElementById("filters").hidden = true;
+  renderSections();
+  var g = document.getElementById("gallery");
+  g.addEventListener("click", function(e){
+    var mb = e.target.closest(".more-btn");
+    if(mb){
+      var c = mb.getAttribute("data-cat"), wasOpen = !!gal.open[c];
+      SECTIONS.forEach(function(sd){ gal.seen[sd[0]] = true; });
+      gal.open[c] = !wasOpen;
+      renderSections(c);
+      if(wasOpen){ var sec = document.getElementById("gsec-"+c); if(sec) scrollToId("gsec-"+c, true); }
+      return;
+    }
+    var t = e.target.closest(".tile"); if(!t) return;
+    var c2 = t.closest(".gsec").getAttribute("data-cat");
+    gal.list = gal.items.filter(function(x){ return catOf(x)===c2; });
+    openLB(parseInt(t.getAttribute("data-i"),10), t);
+  });
+}
+
 /* ================= "More" page rails ================= */
 function moreHTML(){
   return '<div class="more-groups">'+MORE.map(function(g, gi){
+    if(!g.items.some(isReal)) return "";
     var hid = "mg-"+gi;
     return '<section class="more-group reveal" data-g="'+gi+'" aria-labelledby="'+hid+'">'+
-      '<div class="mg-head"><div><h2 id="'+hid+'">'+esc(g.name)+'</h2><span class="mg-count">'+g.items.length+' piece'+(g.items.length===1?'':'s')+'</span></div>'+
+      '<div class="mg-head"><div><h2 id="'+hid+'">'+esc(g.name)+'</h2><span class="mg-count">'+(g.note ? esc(g.note) : g.items.length+' piece'+(g.items.length===1?'':'s'))+'</span></div>'+
       '<div class="mg-arrows"><button type="button" class="icon-btn" data-dir="-1" aria-label="Scroll '+esc(g.name)+' back">'+ic("prev")+'</button><button type="button" class="icon-btn" data-dir="1" aria-label="Scroll '+esc(g.name)+' forward">'+ic("next")+'</button></div></div>'+
-      '<div class="rail" tabindex="0" aria-label="'+esc(g.name)+' work, scrolls sideways">'+g.items.map(railTile).join("")+'</div>'+
+      '<div class="rail'+(g.items.every(isReal) ? ' real' : '')+'" tabindex="0" aria-label="'+esc(g.name)+' work, scrolls sideways">'+g.items.map(railTile).join("")+'</div>'+
     '</section>';
   }).join("")+'</div>'+
   '<p class="gal-note" style="margin-top:28px">Select any piece to view it larger.</p>';
 }
 function railTile(item, i){
+  if(isReal(item)) return masonryTile(item, i).replace(/ class="tile m reveal"/, ' class="tile m"').replace(/ style="--d:[^"]*"/, "");
   gal.masonry = false;
   return tileHTML(item, i).replace(/ class="tile s-[a-z]+ reveal"/, ' class="tile"').replace(/ style="--d:[^"]*"/, "");
 }
@@ -838,22 +1005,33 @@ function bindMore(){
   });
 }
 
+document.addEventListener("error", function(e){
+  var t = e.target;
+  if(t && t.tagName==="IMG" && t.closest && t.closest(".tile-frame.yt, .yt-out")){ t.closest(".tile-frame, .yt-out").classList.add("noimg"); t.remove(); }
+}, true);
 /* ================= Lightbox ================= */
 var lb = document.getElementById("lb"), lbIndex = 0, lbReturn = null;
 function lbShow(i){
   var n = gal.list.length; lbIndex = (i + n) % n;
   var item = gal.list[lbIndex], frame = document.getElementById("lbFrame"), html;
   frame.classList.toggle("fit", item.kind==="photo" && !!item.src);
+  frame.classList.toggle("yt", !!item.yt);
+  if(item.yt){
+    var watch = "https://www.youtube.com/watch?v="+encodeURIComponent(item.yt);
+    html = EMBED_VIDEO
+      ? '<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(item.yt)+'?autoplay=1&rel=0&modestbranding=1" title="'+esc(item.title)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>'
+      : '<div class="yt-out"><img src="'+esc(item.poster)+'" alt=""><a class="btn" href="'+watch+'" target="_blank" rel="noopener noreferrer">Watch on YouTube '+ic("out")+'<span class="sr-only"> (opens in a new tab)</span></a></div>';
+  } else
   if(item.kind==="photo" && item.src) html = '<img src="'+esc(item.src)+'" alt="'+esc(item.title)+'">';
   else if(item.kind==="video" && item.src) html = '<video controls preload="none" playsinline src="'+esc(item.src)+'"'+(item.poster?' poster="'+esc(item.poster)+'"':'')+'></video>';
   else html = '<div class="ph">'+ic(item.kind)+'<span>'+(item.kind==="photo"?"Image coming soon":"Video coming soon")+'</span></div>';
   frame.innerHTML = html;
   document.getElementById("lbCount").textContent = pad(lbIndex+1)+" / "+pad(n);
   document.getElementById("lbTitle").textContent = item.title;
-  document.getElementById("lbClub").textContent = item.club || "";
+  document.getElementById("lbClub").textContent = [item.club, item.credit].filter(Boolean).join(", ");
 }
-function openLB(i, from){ lbReturn = from || null; lbShow(i); if(typeof lb.showModal==="function") lb.showModal(); else lb.setAttribute("open",""); }
-function closeLB(){ var vid = lb.querySelector("video"); if(vid) vid.pause(); if(lb.open) lb.close(); }
+function openLB(i, from){ lbReturn = from || null; lbShow(i); if(typeof lb.showModal==="function") lb.showModal(); else lb.setAttribute("open",""); document.getElementById("lbClose").focus(); }
+function closeLB(){ var vid = lb.querySelector("video"); if(vid) vid.pause(); if(lb.open) lb.close(); document.getElementById("lbFrame").innerHTML=""; }
 lb.addEventListener("close", function(){ var vid = lb.querySelector("video"); if(vid) vid.pause(); document.getElementById("lbFrame").innerHTML=""; if(lbReturn && document.contains(lbReturn)) lbReturn.focus(); });
 lb.addEventListener("click", function(e){ if(e.target===lb) closeLB(); });
 lb.addEventListener("keydown", function(e){
@@ -891,6 +1069,12 @@ function bindForm(){
     var data = {name:f.elements.name.value.trim(), email:f.elements.email.value.trim(), org:f.elements.org.value.trim(),
       need:(f.querySelector('input[name="need"]:checked')||{}).value||"", message:f.elements.message.value.trim()};
     var status = f.querySelector(".form-status"), btn = f.querySelector('button[type="submit"]');
+    if(!CONTACT_ENDPOINT && CONTACT_EMAIL){
+      var body = data.message + "\n\n" + data.name + (data.org ? ", " + data.org : "") + "\n" + data.email;
+      window.location.href = "mailto:" + CONTACT_EMAIL + "?subject=" + encodeURIComponent("Project inquiry: " + (data.need || "BLS Media")) + "&body=" + encodeURIComponent(body);
+      status.textContent = "Your email app should open with your message ready to send.";
+      return;
+    }
     if(!CONTACT_ENDPOINT){ showSent(f, data, false); return; }
     btn.disabled = true; status.textContent = "Sending your message\u2026";
     fetch(CONTACT_ENDPOINT, {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body:JSON.stringify(data)})
@@ -902,7 +1086,7 @@ function showSent(f, d, live){
   var first = esc(d.name.split(/\s+/)[0]);
   f.innerHTML = live
     ? '<div class="sent" tabindex="-1"><h3>Message sent</h3><p>Thanks, '+first+'. I&rsquo;ll reply to '+esc(d.email)+' soon.</p></div>'
-    : '<div class="sent" tabindex="-1"><h3>Form preview</h3><p>Thanks, '+first+'. This preview isn&rsquo;t connected to an inbox yet, so your message wasn&rsquo;t sent.</p></div>';
+    : '<div class="sent" tabindex="-1"><h3>Message not sent</h3><p>Thanks, '+first+'. This form isn&rsquo;t connected to an inbox yet, so your message wasn&rsquo;t sent.</p></div>';
   f.querySelector(".sent").focus();
 }
 
