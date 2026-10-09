@@ -324,6 +324,8 @@ a{color:inherit}
 .social img{width:20px;height:20px;object-fit:contain}
 .social .ic{width:16px;height:16px;transition:transform .25s var(--ease)}
 .social:hover .ic{transform:translate(2px,-2px)}
+.social.icon-only{width:48px;height:48px;padding:0;justify-content:center}
+.social.icon-only img{width:22px;height:22px}
 
 /* ---------- "More" page: one rail per organization ---------- */
 .more-groups{display:grid;gap:clamp(56px,7vw,80px);margin-top:64px}
@@ -460,11 +462,12 @@ var CONTACT_ENDPOINT = "";
 var CONTACT_EMAIL = "";
 /* true = videos play inside the site (works once self-hosted). false = viewer links out to YouTube. */
 var EMBED_VIDEO = true;
-/* Paste your profile links. icon: optional official icon file (URL or data: URI). */
+/* Paste your full profile links. A button appears once its link is filled in.
+   icon: the platform's official icon, uploaded to images/icons/. If the file is missing, the button shows the name instead. */
 var SOCIAL = [
-  {label:"Instagram", url:"https://www.instagram.com/", icon:""},
-  {label:"TikTok",    url:"https://www.tiktok.com/",    icon:""},
-  {label:"LinkedIn",  url:"https://www.linkedin.com/",  icon:""}
+  {label:"Instagram", url:"https://www.instagram.com/bls_media_/", icon:"images/icons/instagram.png"},
+  {label:"TikTok",    url:"https://www.tiktok.com/@bls_media_",    icon:"images/icons/tiktok.png"},
+  {label:"LinkedIn",  url:"https://www.linkedin.com/in/brandon-schinnour",  icon:"images/icons/linkedin.png"}
 ];
 
 var TEAMS = [
@@ -727,8 +730,9 @@ function socials(){
   var real = SOCIAL.filter(function(x){ return x.url && !/^https?:\/\/[^\/]+\/?$/.test(x.url); });
   if(!real.length) return "";
   return '<div class="socials">'+real.map(function(x){
-    return '<a class="social" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+
-      (x.icon ? '<img src="'+esc(x.icon)+'" alt="">' : '')+esc(x.label)+ic("out")+
+    if(x.icon) return '<a class="social icon-only" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(x.label)+' (opens in a new tab)" title="'+esc(x.label)+'" data-label="'+esc(x.label)+'">'+
+      '<img src="'+esc(x.icon)+'" alt=""></a>';
+    return '<a class="social" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+esc(x.label)+ic("out")+
       '<span class="sr-only"> (opens in a new tab)</span></a>';
   }).join("")+'</div>';
 }
@@ -1007,6 +1011,10 @@ function bindMore(){
 
 document.addEventListener("error", function(e){
   var t = e.target;
+  if(t && t.tagName==="IMG" && t.parentNode && t.parentNode.classList && t.parentNode.classList.contains("icon-only")){
+    var a = t.parentNode; a.classList.remove("icon-only"); a.removeAttribute("title"); a.removeAttribute("aria-label");
+    a.innerHTML = esc(a.getAttribute("data-label"))+ic("out")+'<span class="sr-only"> (opens in a new tab)</span>'; return;
+  }
   if(t && t.tagName==="IMG" && t.closest && t.closest(".tile-frame.yt, .yt-out")){ t.closest(".tile-frame, .yt-out").classList.add("noimg"); t.remove(); }
 }, true);
 /* ================= Lightbox ================= */
