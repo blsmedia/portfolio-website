@@ -17,6 +17,8 @@ No upload needed. The ID is the part after `youtu.be/` (or after `v=`).
 
 `y("Season hype video", "", "npiEUs-_MR8", "shot-edited"),`
 
+Vertical Shorts use `ys(...)` the same way. If a video won't play on the site (music copyright, embedding turned off), change `ys` to `ysl` (or `y` to `ysl` for a Short) and the tile opens it on YouTube instead.
+
 Credit options: `"shot-edited"`, `"edited"`, `"edited-some-shot"`, your own wording in quotes, or `""` for none.
 
 ## Add a section to the More page

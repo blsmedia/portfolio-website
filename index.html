@@ -534,6 +534,9 @@ function y(title, club, id, credit, poster){
 }
 /* ys(...) -> same as y(...) but for a vertical YouTube Short */
 function ys(title, club, id, credit, poster){ var o = y(title, club, id, credit, poster); o.vertical = true; return o; }
+/* ysl: same as ys, but opens on YouTube instead of playing on the site (use when embedding is blocked) */
+function ysl(title, club, id, credit, poster){ var o = ys(title, club, id, credit, poster); o.ext = true; return o; }
+function ytLink(item){ return item.vertical ? "https://www.youtube.com/shorts/"+encodeURIComponent(item.yt) : "https://www.youtube.com/watch?v="+encodeURIComponent(item.yt); }
 
 var GALLERY = {
   "org:tigers": [
@@ -606,7 +609,7 @@ var GALLERY = {
     p("Tigers Training Camp 2026", "", img("tigers/camp-shot-release")),
     p("Tigers Training Camp 2026", "", img("tigers/camp-on-the-move")),
     ys("Liam & Markus Ruck hype video", "", "CKWIH0rpjdA", "edited-some-shot"),
-    ys("Championship ring reveal", "", "1SEwXH_8PVM", "edited-some-shot"),
+    ysl("Championship ring reveal", "", "1SEwXH_8PVM", "edited-some-shot"),
     ys("Goalie mask reveal", "", "HSPAFGotAMs", "shot-edited"),
     y("2026 playoff hype video", "", "npiEUs-_MR8", "edited-some-shot"),
     y("2026 Eastern Conference Final hype video", "", "NnWmC2i0R9M", "edited-some-shot"),
@@ -738,7 +741,7 @@ var GALLERY = {
   ],
   "service:videography": [
     ys("Liam & Markus Ruck hype video", T.tigers, "CKWIH0rpjdA", "edited-some-shot"),
-    ys("Championship ring reveal", T.tigers, "1SEwXH_8PVM", "edited-some-shot"),
+    ysl("Championship ring reveal", T.tigers, "1SEwXH_8PVM", "edited-some-shot"),
     ys("Goalie mask reveal", T.tigers, "HSPAFGotAMs", "shot-edited"),
     y("2026 playoff hype video", T.tigers, "npiEUs-_MR8", "edited-some-shot"),
     y("2026 Eastern Conference Final hype video", T.tigers, "NnWmC2i0R9M", "edited-some-shot"),
@@ -1247,8 +1250,8 @@ function lbShow(i){
   frame.classList.toggle("yt", !!item.yt);
   frame.classList.toggle("v", !!item.vertical);
   if(item.yt){
-    var watch = "https://www.youtube.com/watch?v="+encodeURIComponent(item.yt);
-    html = EMBED_VIDEO
+    var watch = ytLink(item);
+    html = (EMBED_VIDEO && !item.ext)
       ? '<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(item.yt)+'?autoplay=1&rel=0&modestbranding=1" title="'+esc(item.title)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>'
       : '<div class="yt-out"><img src="'+esc(item.poster)+'" alt=""><a class="btn" href="'+watch+'" target="_blank" rel="noopener noreferrer">Watch on YouTube '+ic("out")+'<span class="sr-only"> (opens in a new tab)</span></a></div>';
   } else
@@ -1260,7 +1263,7 @@ function lbShow(i){
   document.getElementById("lbTitle").textContent = item.notitle ? "" : item.title;
   document.getElementById("lbClub").textContent = [item.club, item.credit].filter(Boolean).join(", ");
 }
-function openLB(i, from){ lbReturn = from || null; lbShow(i); if(typeof lb.showModal==="function") lb.showModal(); else lb.setAttribute("open",""); document.getElementById("lbClose").focus(); }
+function openLB(i, from){ var it = gal.list[(i + gal.list.length) % gal.list.length]; if(it && it.ext){ window.open(ytLink(it), "_blank", "noopener"); return; } lbReturn = from || null; lbShow(i); if(typeof lb.showModal==="function") lb.showModal(); else lb.setAttribute("open",""); document.getElementById("lbClose").focus(); }
 function closeLB(){ var vid = lb.querySelector("video"); if(vid) vid.pause(); if(lb.open) lb.close(); document.getElementById("lbFrame").innerHTML=""; }
 lb.addEventListener("close", function(){ var vid = lb.querySelector("video"); if(vid) vid.pause(); document.getElementById("lbFrame").innerHTML=""; if(lbReturn && document.contains(lbReturn)) lbReturn.focus(); });
 lb.addEventListener("click", function(e){ if(e.target===lb) closeLB(); });
