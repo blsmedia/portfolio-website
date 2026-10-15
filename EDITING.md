@@ -8,6 +8,8 @@ Every change: open `index.html` in GitHub, click the pencil, use Ctrl+F to find 
    - Photo: `p("Warmup: Smith", "", img("tigers/new-shot.jpg")),`
    - Graphic: `g("Home opener", "", img("tigers/home-opener.jpg")),`
 
+   - Photo with no title showing (like the Bulldogs photos): use `pn` instead of `p`.
+
 On a service page, put the organization in the second spot so it shows under the title: `g("Home opener", T.tigers, img("tigers/home-opener.jpg")),`
 
 ## Add a YouTube video
@@ -27,7 +29,9 @@ Search for the sentence (your bio, a job title) and retype it.
 
 ## Social links and contact form
 - Search `var SOCIAL` and paste your full profile links. Buttons only appear once a real link is in.
-- Search `var CONTACT_EMAIL` and type your email between the quotes. "Send message" will then open the visitor's email app with their message filled in.
+- Icons: upload each platform's official icon to `images/icons/` as `instagram.png`, `tiktok.png` and `linkedin.png`. If one is missing, that button shows the name instead.
+- Contact form (best): make a free form at formspree.io, then search `var CONTACT_ENDPOINT` and paste the form link between the quotes. Messages go straight to your inbox.
+- Contact form (quick): search `var CONTACT_EMAIL` and type your email between the quotes. "Send message" opens the visitor's email app with their message filled in.
 
 ## Avoid these
 - Apostrophes in text: type `’` (curly) or `&rsquo;`, never a straight `'`.

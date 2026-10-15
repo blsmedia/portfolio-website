@@ -153,6 +153,10 @@ a{color:inherit}
 .tc-logo{height:104px;display:flex;align-items:center;justify-content:center}
 .tc-logo > img{max-width:100%;max-height:100%;width:auto;height:auto}
 .tc-logo > svg{height:90%;width:auto}
+.svc-row-icon{filter:none}
+.svc-row-icon .svc-icon{width:84px;height:84px}
+.svc-row-icon .svc-icon .ic{width:40px;height:40px;stroke-width:1.5}
+@media (max-width:640px){.svc-row-icon .svc-icon{width:56px;height:56px}.svc-row-icon .svc-icon .ic{width:28px;height:28px}}
 .team-list li:nth-child(even) .tc-logo{--tilt-h:6deg}
 .team-card:hover .tc-logo,.team-card:focus-visible .tc-logo{transform:translateY(-6px) rotate(var(--tilt-h,-6deg))}
 .tc-name{display:block;font:700 clamp(26px,3.1vw,38px)/1.05 var(--display);letter-spacing:-.01em}
@@ -169,7 +173,8 @@ a{color:inherit}
 }
 
 /* ---------- Service cards ---------- */
-.svc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.svc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:1000px) and (min-width:721px){.svc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .svc-card{--team:var(--steel);position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:230px;padding:28px 28px 26px;color:var(--ivory);text-decoration:none;transition:transform .3s var(--ease)}
 .svc-card::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--surface);clip-path:var(--cut-lg);transition:background-color .3s var(--ease)}
 .svc-card:hover,.svc-card:focus-visible{transform:translateY(-4px)}
@@ -328,11 +333,17 @@ a{color:inherit}
 .social.icon-only img{width:22px;height:22px}
 
 /* ---------- "More" page: one rail per organization ---------- */
-.more-groups{display:grid;gap:clamp(56px,7vw,80px);margin-top:64px}
+.more-groups{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(56px,7vw,80px);margin-top:64px}
+.more-group{min-width:0}
 .mg-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px}
 .mg-head h2{margin:0;font:600 clamp(22px,2.4vw,28px)/1.2 var(--display)}
 .mg-count{display:block;margin-top:6px;font:500 14px/1 var(--body);color:var(--ivory-62)}
 .mg-arrows{display:flex;gap:8px}
+.mg-id{display:flex;align-items:center;gap:16px;min-width:0}
+/* logo height = heading line + count line, so it never reaches past the text */
+.mg-logo{flex:none;display:block;line-height:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+.mg-logo img{display:block;height:calc(clamp(22px,2.4vw,28px) * 1.2 + 20px);width:auto;max-width:150px;object-fit:contain}
+@media (max-width:640px){.mg-id{gap:12px}}
 .mg-arrows .icon-btn[disabled]{opacity:.35;cursor:default}
 .mg-arrows .icon-btn[disabled]::before{background:var(--surface)}
 .mg-arrows[hidden]{display:none}
@@ -376,12 +387,14 @@ a{color:inherit}
 /* ---------- Video credits, YouTube tiles, More rails ---------- */
 .tile-credit{display:block;margin-top:4px;font:500 13px/1.3 var(--body);color:var(--ivory-62)}
 .tile-frame.yt{aspect-ratio:16/9}
+.tile-frame.yt.v{aspect-ratio:9/16}
 .tile-frame.yt > img{height:100%;object-fit:cover}
 .tile-frame.yt.noimg{background:radial-gradient(120% 120% at 30% 20%,#33333a 0%,var(--surface) 60%)}
 .rail.real{grid-auto-columns:max-content}
-.rail .tile.m{aspect-ratio:auto;width:auto;text-align:left;scroll-snap-align:start}
-.rail .tile.m .tile-frame > img{height:clamp(280px,32vw,420px);width:auto;max-width:none}
+.rail .tile.m{aspect-ratio:auto;width:min-content;text-align:left;scroll-snap-align:start}
+.rail .tile.m .tile-frame > img{width:auto;height:auto;max-height:clamp(280px,32vw,420px);max-width:min(78vw,820px)}
 .lb-frame.yt{aspect-ratio:16/9}
+.lb-frame.yt.v{aspect-ratio:9/16;width:min(100%, calc(76dvh * 9 / 16));max-height:76dvh;margin-inline:auto}
 .lb-frame > iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .yt-out{position:absolute;inset:0;display:grid;place-items:center;background:#000}
 .yt-out > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
@@ -480,28 +493,29 @@ var TEAMS = [
   {slug:"bisons",   name:"Okotoks Bisons", mono:"OB", color:"#25408F", logo:"images/logos/bisons.webp",
    role:"Director of Communications & Social Media Manager",
    blurb:"Running communications for the Bisons: social graphics, video, photography and the announcements fans see first."},
+  {slug:"woodys",   name:"Woody's RV World", mono:"WRV", color:"#C8202F", logo:"images/logos/woodys-rv.webp",
+   role:"Marketing Intern",
+   blurb:"Marketing for Woody's RV World: promotions, events, web banners and print."},
   {slug:"more",     name:"More", mono:"", color:"#3A68B0", logo:"",
    role:"Other organizations and personal projects",
-   blurb:"Work for Woody's RV World, the Okotoks Oilers, Mavericks Elite Lacrosse Club and the Heritage Junior Hockey League, plus volunteer work for the Three Angels Poker Chip Run."}
+   blurb:"Work for the Okotoks Oilers, Mavericks Elite Lacrosse Club and the Heritage Junior Hockey League, plus volunteer work for the Three Angels Poker Chip Run."}
 ];
 
 var SERVICES = [
   {slug:"graphic-design", name:"Graphic design", icon:"design",
    desc:"Game-day graphics, score and schedule templates, player features and brand systems.",
    tagline:"For the Tigers, Bisons, Bulldogs and more"},
-  {slug:"videography", name:"Videography", icon:"video",
-   desc:"Hype videos, highlight packages, interviews and cuts sized for every platform.",
-   tagline:"Shot and edited in-house, start to finish"},
   {slug:"photography", name:"Photography", icon:"photo",
    desc:"Game action, media day portraits and community events.",
    tagline:"From the bench, the rink and the community"},
-  {slug:"other", name:"Other", icon:"more",
-   desc:"Game notes, stats, press releases and community events off the ice.",
-   tagline:"The communications work behind every game"}
+  {slug:"videography", name:"Videography", icon:"video",
+   desc:"Hype videos, highlight packages, interviews and cuts sized for every platform.",
+   tagline:"Shot and edited in-house, start to finish"}
 ];
 
-var T = {tigers:"Medicine Hat Tigers", bulldogs:"Blackfalds Bulldogs", bisons:"Okotoks Bisons", oilers:"Okotoks Oilers", colts:"Mountainview Colts"};
+var T = {tigers:"Medicine Hat Tigers", bulldogs:"Blackfalds Bulldogs", bisons:"Okotoks Bisons", oilers:"Okotoks Oilers", colts:"Mountainview Colts", woodys:"Woody's RV World"};
 function p(title, club, src){ return {kind:"photo", title:title, club:club||"", src:src||""}; }
+function pn(title, club, src){ var o = p(title, club, src); o.notitle = true; return o; }
 function g(title, club, src){ return {kind:"photo", cat:"graphic", title:title, club:club||"", src:src||""}; }
 function v(title, club, src, poster){ return {kind:"video", title:title, club:club||"", src:src||"", poster:poster||""}; }
 /* img("bulldogs/home-opener") -> images/bulldogs/home-opener.webp
@@ -518,41 +532,92 @@ function y(title, club, id, credit, poster){
   return {kind:"video", title:title, club:club||"", yt:id, credit:CREDIT[credit]||credit||"",
           poster:poster||("https://i.ytimg.com/vi/"+id+"/hqdefault.jpg"), ytThumb:!poster};
 }
+/* ys(...) -> same as y(...) but for a vertical YouTube Short */
+function ys(title, club, id, credit, poster){ var o = y(title, club, id, credit, poster); o.vertical = true; return o; }
 
 var GALLERY = {
   "org:tigers": [
-    g("Central Division champions", "", img("tigers/central-division-champions")),
     g("Player of the Year", "", img("tigers/player-of-the-year")),
     g("Draft day", "", img("tigers/draft-day")),
     g("Playoffs clinched", "", img("tigers/playoffs-clinched")),
-    g("Defenceman of the Year", "", img("tigers/defenceman-of-the-year")),
+    g("WHL Opening Week", "", img("tigers/whl-opening-week")),
     g("33 goals: team & modern WHL record", "", img("tigers/33-goals-record")),
+    g("Defenceman of the Year", "", img("tigers/defenceman-of-the-year")),
+    g("Team Finland selection", "", img("tigers/team-finland")),
+    g("Central Division champions", "", img("tigers/central-division-champions")),
     g("NHL debut", "", img("tigers/nhl-debut")),
+    g("2,000 franchise wins", "", img("tigers/2000-franchise-wins")),
+    g("Team Canada selection", "", img("tigers/team-canada-u17")),
+    g("32 goals: record tied", "", img("tigers/32-goals-record-tied")),
+    g("Graduating player thank you", "", img("tigers/graduating-thank-you")),
+    g("One more day", "", img("tigers/one-more-day")),
     g("Drafted", "", img("tigers/drafted")),
     g("Tigers in the rankings", "", img("tigers/tigers-in-the-rankings")),
     g("Trade alert", "", img("tigers/trade-alert")),
-    g("2,000 franchise wins", "", img("tigers/2000-franchise-wins")),
-    g("WHL Opening Week", "", img("tigers/whl-opening-week")),
-    g("Team Finland selection", "", img("tigers/team-finland")),
-    g("Team Canada selection", "", img("tigers/team-canada-u17")),
     g("Milestone: 100 career games", "", img("tigers/100-career-games")),
-    g("Graduating player thank you", "", img("tigers/graduating-thank-you")),
-    g("32 goals: record tied", "", img("tigers/32-goals-record-tied")),
-    g("One more day", "", img("tigers/one-more-day")),
     g("Single game tickets", "", img("tigers/single-game-tickets")),
     g("Online auction", "", img("tigers/online-auction")),
-    p("Tunnel: goalie stretch", "", img("tigers/tunnel-goalie-stretch")),
-    p("Pre-game portrait", "", img("tigers/pregame-portrait")),
-    p("Tunnel walk", "", img("tigers/tunnel-walk")),
-    p("Goalie water spray", "", img("tigers/goalie-water-spray")),
-    p("Warmup: puck flip", "", img("tigers/warmup-puck-flip")),
-    p("Goalie at the bench", "", img("tigers/goalie-at-the-bench")),
-    p("Warmup: Bryzgalov", "", img("tigers/warmup-bryzgalov")),
-    p("Mask detail", "", img("tigers/mask-detail")),
-    p("Walkout high-fives", "", img("tigers/walkout-high-fives")),
-    p("Warmup: Pickford", "", img("tigers/warmup-pickford")),
-    p("Warmup", "", img("tigers/warmup")),
-    y("2026 playoff hype video: Round 1", "", "npiEUs-_MR8", "")
+    p("Carter Casey looms", "", img("tigers/tunnel-goalie-stretch")),
+    p("Jordan Switzer at the bench", "", img("tigers/goalie-at-the-bench")),
+    p("Kade Stengrim warming up", "", img("tigers/warmup-puck-flip")),
+    p("Ethan Neutens tunnel walk", "", img("tigers/tunnel-walk")),
+    p("Yaroslav Bryzgalov - Saddledome Warmups", "", img("tigers/warmup-bryzgalov")),
+    p("Reily Pickford", "", img("tigers/warmup-pickford")),
+    p("Bryce Pickford & Jonas Woo", "", img("tigers/tunnel-pregame-huddle")),
+    p("Jordan Switzer Splash Zone", "", img("tigers/goalie-water-spray")),
+    p("Championship ring closeup", "", img("tigers/ring-crest")),
+    p("Championship ring closeup 2", "", img("tigers/ring-trophy-side")),
+    p("Championship ring closeup 3", "", img("tigers/ring-side-profile")),
+    p("Championship ring closeup 4", "", img("tigers/ring-nameplate")),
+    p("Niilopekka Muhonen", "", img("tigers/pregame-portrait")),
+    p("Reily Pickford", "", img("tigers/warmup-22")),
+    p("Shaeffer Gordon-Carroll warmups", "", img("tigers/warmup")),
+    p("Arvid Drott", "", img("tigers/warmup-21")),
+    p("Carter Casey closeup", "", img("tigers/mask-detail")),
+    p("Goalie mask closeup", "", img("tigers/mask-tiger-detail")),
+    p("Goalie mask closeup 2", "", img("tigers/mask-championship-detail")),
+    p("The Rucks", "", img("tigers/walkout-high-fives")),
+    p("Tigers team store hoodies", "", img("tigers/merch-hoodies")),
+    p("Tigers team store clappers", "", img("tigers/merch-clappers")),
+    p("New jersey photoshoot", "", img("tigers/jersey-01")),
+    p("New jersey photoshoot", "", img("tigers/jersey-02")),
+    p("New jersey photoshoot", "", img("tigers/jersey-03")),
+    p("New jersey photoshoot", "", img("tigers/jersey-04")),
+    p("New jersey photoshoot", "", img("tigers/jersey-05")),
+    p("New jersey photoshoot", "", img("tigers/jersey-06")),
+    p("New jersey photoshoot", "", img("tigers/jersey-07")),
+    p("New jersey photoshoot", "", img("tigers/jersey-08")),
+    p("New jersey photoshoot", "", img("tigers/jersey-09")),
+    p("New jersey photoshoot", "", img("tigers/jersey-10")),
+    p("New jersey photoshoot", "", img("tigers/jersey-11")),
+    p("New jersey photoshoot", "", img("tigers/jersey-12")),
+    p("New jersey photoshoot", "", img("tigers/jersey-13")),
+    p("New jersey photoshoot", "", img("tigers/jersey-14")),
+    p("New jersey photoshoot", "", img("tigers/jersey-15")),
+    p("2026 Tigers Training Camp Champions", "", img("tigers/camp-champions")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-goalie-walkout")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-through-the-glass")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-all-smiles")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-corner-battle")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-one-timer")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-puck-control")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-reading-the-play")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-behind-the-net")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-shot-release")),
+    p("Tigers Training Camp 2026", "", img("tigers/camp-on-the-move")),
+    ys("Liam & Markus Ruck hype video", "", "CKWIH0rpjdA", "edited-some-shot"),
+    ys("Championship ring reveal", "", "1SEwXH_8PVM", "edited-some-shot"),
+    ys("Goalie mask reveal", "", "HSPAFGotAMs", "shot-edited"),
+    y("2026 playoff hype video", "", "npiEUs-_MR8", "edited-some-shot"),
+    y("2026 Eastern Conference Final hype video", "", "NnWmC2i0R9M", "edited-some-shot"),
+    y("3 Rucks connect for a goal", "", "Ul3B8PKw6o4", "shot-edited"),
+    y("Training camp: Liam Ruck OT winner", "", "9gawrds2dD8", "shot-edited"),
+    y("Training camp: Michael Kuzik goal", "", "0ozRgq6OIno", "shot-edited"),
+    ys("Shaeffer Gordon-Carroll hype video", "", "3OQVBVLP4cM", "edited-some-shot"),
+    ys("Pickford hype video", "", "xsLY2shM-yg", "edited-some-shot"),
+    ys("Playoffs: Pickford OT winner, Round 2 Game 2", "", "AvBJxlcUXS4", "shot-edited"),
+    ys("Pucks & Paws", "", "xqEkbk5RjZ8", "shot-edited"),
+    y("Training camp: Ruck brothers hit the post", "", "tzG7kbxN5pk", "shot-edited")
   ],
   "org:bulldogs": [
     g("Alumni spotlight: Team Canada", "", img("bulldogs/alumni-spotlight")),
@@ -578,62 +643,207 @@ var GALLERY = {
     g("Season thank you", "", img("bulldogs/thank-you")),
     g("Monthly schedule: February", "", img("bulldogs/monthly-schedule")),
     g("Theme night schedule", "", img("bulldogs/theme-night-schedule")),
-    g("Theme nights this month", "", img("bulldogs/theme-nights-month"))
+    g("Theme nights this month", "", img("bulldogs/theme-nights-month")),
+    pn("Goal celebration", "", img("bulldogs/photo-goal-celebration")),
+    pn("Shaw: follow-through", "", img("bulldogs/photo-shaw-follow-through")),
+    pn("Ready for the faceoff", "", img("bulldogs/photo-faceoff-ready")),
+    pn("Celebrating with the crowd", "", img("bulldogs/photo-glass-celebration")),
+    pn("Goalie: set in the crease", "", img("bulldogs/photo-goalie-set")),
+    pn("Shaw: winding up", "", img("bulldogs/photo-shaw-shot")),
+    pn("Neu: celebration", "", img("bulldogs/photo-neu-celebration")),
+    pn("Alternate captain", "", img("bulldogs/photo-alternate-captain")),
+    pn("Reading the play", "", img("bulldogs/photo-on-the-ice")),
+    pn("Goalie: in the crease", "", img("bulldogs/photo-goalie-crease")),
+    pn("Gear sale: helmets", "", img("bulldogs/photo-gear-helmets")),
+    pn("Gear sale: gold gloves", "", img("bulldogs/photo-gear-gold-gloves")),
+    pn("Gear sale: grey gloves", "", img("bulldogs/photo-gear-grey-gloves")),
+    pn("Gear sale: clearance", "", img("bulldogs/photo-gear-clearance")),
+    y("Fashion show promo video", "", "TE1c9PHeRnI", "edited"),
+    y("Fashion show promo video 2", "", "EQjA7IcqYXk", "edited")
+  ],
+  "org:woodys": [
+    g("RV Business Top 50 Dealer Awards application", "", img("more/woodys-rv-awards")),
+    g("Weekend parts & accessories promo", "", img("more/woodys-weekends-accessorize")),
+    g("Canada Day", "", img("more/woodys-canada-day")),
+    g("Trade-in campaign", "", img("more/woodys-trade-in-square")),
+    g("RV Road Show: monthly payments", "", img("more/woodys-road-show-monthly-payments")),
+    g("Wholesale savings card", "", img("more/woodys-wholesale-savings-card")),
+    g("Wholesale savings card: alternate design", "", img("more/woodys-wholesale-savings-card-2")),
+    g("Saskatoon: #1 mobile service truck", "", img("more/woodys-saskatoon-mobile-truck")),
+    g("RV Road Show: on now", "", img("more/woodys-road-show-on-now")),
+    g("RV Road Show: drive away in a new RV", "", img("more/woodys-road-show-drive-away")),
+    g("RV Road Show: featured brands", "", img("more/woodys-road-show-featuring")),
+    g("RV Road Show: accessorize your RV", "", img("more/woodys-road-show-accessorize")),
+    g("Impact RV Collision flyer", "", img("more/woodys-impact-rv-collision-flyer")),
+    g("Website banner: Solera", "", img("more/woodys-solera-banner")),
+    g("Website banner: trade-in campaign", "", img("more/woodys-trade-in-banner"))
   ],
   "org:bisons": [
     g("2024 Hockey Alberta provincial champions", "", img("bisons/provincial-champions")),
-    g("Back to back to back HJHL champions", "", img("bisons/three-peat-champions")),
     g("Bisons vs Generals: a historic rivalry", "", img("bisons/bisons-vs-generals")),
-    g("Milestone: 50 points", "", img("bisons/50-points"))
+    g("Award: Presidents Trophy", "", img("bisons/presidents-trophy")),
+    g("Advance to the HJHL finals, 3rd year in a row", "", img("bisons/advance-to-finals")),
+    g("Back to back to back HJHL champions", "", img("bisons/three-peat-champions")),
+    g("Back to back HJHL champions", "", img("bisons/back-to-back-champions")),
+    g("Milestone: 50 points", "", img("bisons/50-points")),
+    g("Playoff game day", "", img("bisons/playoff-gameday")),
+    g("Final score: 4-1, series win", "", img("bisons/final-4-1")),
+    g("Game day", "", img("bisons/gameday")),
+    g("Graduating player thank you", "", img("bisons/thank-you-tainton")),
+    g("Advance to the HJHL championship", "", img("bisons/advances-championship")),
+    g("Final score: 7-0, series sweep", "", img("bisons/final-7-0")),
+    g("Head coach announcement", "", img("bisons/welcome-back-coach")),
+    g("2,000 followers", "", img("bisons/2000-followers")),
+    g("Brand standards guide", "", img("bisons/brand-guide")),
+    g("Award: Top Goalie", "", img("bisons/top-goalie")),
+    g("Bisons win series", "", img("bisons/win-series")),
+    g("Semifinals matchup confirmed", "", img("bisons/semifinals-matchup")),
+    g("Series preview: Bisons vs Rams", "", img("bisons/series-preview")),
+    g("Playoff weekend preview", "", img("bisons/weekend-preview")),
+    g("Best GAA in the HJHL", "", img("bisons/best-gaa")),
+    g("Season opener", "", img("bisons/season-opener")),
+    g("Exhibition game day", "", img("bisons/exhibition-flyers")),
+    g("Provincials schedule", "", img("bisons/provincials-schedule")),
+    g("Monthly schedule: January", "", img("bisons/january-schedule")),
+    g("Player & jersey auction poster", "", img("bisons/jersey-auction")),
+    y("2024 HJHL Finals hype video", "", "g2BjEF5bldQ", "edited-some-shot"),
+    ys("2024 HJHL Playoffs hype video", "", "_sFUdQLoJS0", "edited-some-shot")
   ],
   "service:graphic-design": [
-    g("Central Division champions", T.tigers, img("tigers/central-division-champions")),
-    g("Player of the Year", T.tigers, img("tigers/player-of-the-year")),
-    g("Draft day", T.tigers, img("tigers/draft-day")),
-    g("Playoffs clinched", T.tigers, img("tigers/playoffs-clinched")),
     g("Defenceman of the Year", T.tigers, img("tigers/defenceman-of-the-year")),
-    g("33 goals: team & modern WHL record", T.tigers, img("tigers/33-goals-record")),
-    g("NHL debut", T.tigers, img("tigers/nhl-debut")),
-    g("Drafted", T.tigers, img("tigers/drafted")),
-    g("Tigers in the rankings", T.tigers, img("tigers/tigers-in-the-rankings")),
-    g("Trade alert", T.tigers, img("tigers/trade-alert")),
-    g("2,000 franchise wins", T.tigers, img("tigers/2000-franchise-wins")),
+    g("Alumni spotlight: Team Canada", T.bulldogs, img("bulldogs/alumni-spotlight")),
+    g("Bisons vs Generals: a historic rivalry", T.bisons, img("bisons/bisons-vs-generals")),
+    g("Draft day", T.tigers, img("tigers/draft-day")),
+    g("2024 Hockey Alberta provincial champions", T.bisons, img("bisons/provincial-champions")),
+    g("Playoffs clinched", T.tigers, img("tigers/playoffs-clinched")),
+    g("Player birthday", T.bulldogs, img("bulldogs/birthday")),
+    g("Advance to the HJHL finals, 3rd year in a row", T.bisons, img("bisons/advance-to-finals")),
     g("WHL Opening Week", T.tigers, img("tigers/whl-opening-week")),
-    g("Team Finland selection", T.tigers, img("tigers/team-finland")),
-    g("Team Canada selection", T.tigers, img("tigers/team-canada-u17")),
-    g("Milestone: 100 career games", T.tigers, img("tigers/100-career-games")),
-    g("Graduating player thank you", T.tigers, img("tigers/graduating-thank-you")),
     g("32 goals: record tied", T.tigers, img("tigers/32-goals-record-tied")),
-    g("One more day", T.tigers, img("tigers/one-more-day")),
-    g("Single game tickets", T.tigers, img("tigers/single-game-tickets")),
-    g("Online auction", T.tigers, img("tigers/online-auction"))
+    g("Final score: home win", T.bulldogs, img("bulldogs/final-win-home")),
+    g("Final score: road win", T.bulldogs, img("bulldogs/final-win-away")),
+    g("NHL debut", T.tigers, img("tigers/nhl-debut")),
+    g("2,000 franchise wins", T.tigers, img("tigers/2000-franchise-wins")),
+    g("33 goals: team & modern WHL record", T.tigers, img("tigers/33-goals-record")),
+    g("Milestone: 100 career games", T.tigers, img("tigers/100-career-games")),
+    g("Milestone: 50 points", T.bisons, img("bisons/50-points")),
+    g("Award: Presidents Trophy", T.bisons, img("bisons/presidents-trophy")),
+    g("Team Finland selection", T.tigers, img("tigers/team-finland")),
+    g("Online auction", T.tigers, img("tigers/online-auction")),
+    g("Exhibition schedule", T.bulldogs, img("bulldogs/exhibition-schedule")),
+    g("Player signing", T.bulldogs, img("bulldogs/signed")),
+    g("Head coach announcement", T.bisons, img("bisons/welcome-back-coach")),
+    g("RV Business Top 50 Dealer Awards application", T.woodys, img("more/woodys-rv-awards")),
+    g("Weekend parts & accessories promo", T.woodys, img("more/woodys-weekends-accessorize"))
   ],
   "service:videography": [
-    y("2026 playoff hype video: Round 1", T.tigers, "npiEUs-_MR8", "")
+    ys("Liam & Markus Ruck hype video", T.tigers, "CKWIH0rpjdA", "edited-some-shot"),
+    ys("Championship ring reveal", T.tigers, "1SEwXH_8PVM", "edited-some-shot"),
+    ys("Goalie mask reveal", T.tigers, "HSPAFGotAMs", "shot-edited"),
+    y("2026 playoff hype video", T.tigers, "npiEUs-_MR8", "edited-some-shot"),
+    y("2026 Eastern Conference Final hype video", T.tigers, "NnWmC2i0R9M", "edited-some-shot"),
+    y("3 Rucks connect for a goal", T.tigers, "Ul3B8PKw6o4", "shot-edited"),
+    y("Training camp: Liam Ruck OT winner", T.tigers, "9gawrds2dD8", "shot-edited"),
+    y("Training camp: Michael Kuzik goal", T.tigers, "0ozRgq6OIno", "shot-edited"),
+    ys("Shaeffer Gordon-Carroll hype video", T.tigers, "3OQVBVLP4cM", "edited-some-shot"),
+    ys("Pickford hype video", T.tigers, "xsLY2shM-yg", "edited-some-shot"),
+    ys("Playoffs: Pickford OT winner, Round 2 Game 2", T.tigers, "AvBJxlcUXS4", "shot-edited"),
+    ys("Pucks & Paws", T.tigers, "xqEkbk5RjZ8", "shot-edited"),
+    y("Training camp: Ruck brothers hit the post", T.tigers, "tzG7kbxN5pk", "shot-edited"),
+    y("2024 HJHL Finals hype video", T.bisons, "g2BjEF5bldQ", "edited-some-shot"),
+    ys("2024 HJHL Playoffs hype video", T.bisons, "_sFUdQLoJS0", "edited-some-shot"),
+    y("Fashion show promo video", T.bulldogs, "TE1c9PHeRnI", "edited"),
+    y("Fashion show promo video 2", T.bulldogs, "EQjA7IcqYXk", "edited")
   ],
   "service:photography": [
-    p("Tunnel: goalie stretch", T.tigers, img("tigers/tunnel-goalie-stretch")),
-    p("Pre-game portrait", T.tigers, img("tigers/pregame-portrait")),
-    p("Tunnel walk", T.tigers, img("tigers/tunnel-walk")),
-    p("Goalie water spray", T.tigers, img("tigers/goalie-water-spray")),
-    p("Warmup: puck flip", T.tigers, img("tigers/warmup-puck-flip")),
-    p("Goalie at the bench", T.tigers, img("tigers/goalie-at-the-bench")),
-    p("Warmup: Bryzgalov", T.tigers, img("tigers/warmup-bryzgalov")),
-    p("Mask detail", T.tigers, img("tigers/mask-detail")),
-    p("Walkout high-fives", T.tigers, img("tigers/walkout-high-fives")),
-    p("Warmup: Pickford", T.tigers, img("tigers/warmup-pickford")),
-    p("Warmup", T.tigers, img("tigers/warmup"))
+    p("Carter Casey looms", T.tigers, img("tigers/tunnel-goalie-stretch")),
+    p("Jordan Switzer at the bench", T.tigers, img("tigers/goalie-at-the-bench")),
+    p("Kade Stengrim warming up", T.tigers, img("tigers/warmup-puck-flip")),
+    p("Ethan Neutens tunnel walk", T.tigers, img("tigers/tunnel-walk")),
+    p("Yaroslav Bryzgalov - Saddledome Warmups", T.tigers, img("tigers/warmup-bryzgalov")),
+    p("Reily Pickford", T.tigers, img("tigers/warmup-pickford")),
+    p("Bryce Pickford & Jonas Woo", T.tigers, img("tigers/tunnel-pregame-huddle")),
+    p("Jordan Switzer Splash Zone", T.tigers, img("tigers/goalie-water-spray")),
+    p("Championship ring closeup", T.tigers, img("tigers/ring-crest")),
+    p("Championship ring closeup 2", T.tigers, img("tigers/ring-trophy-side")),
+    p("Championship ring closeup 3", T.tigers, img("tigers/ring-side-profile")),
+    p("Championship ring closeup 4", T.tigers, img("tigers/ring-nameplate")),
+    p("Niilopekka Muhonen", T.tigers, img("tigers/pregame-portrait")),
+    p("Reily Pickford", T.tigers, img("tigers/warmup-22")),
+    p("Shaeffer Gordon-Carroll warmups", T.tigers, img("tigers/warmup")),
+    p("Arvid Drott", T.tigers, img("tigers/warmup-21")),
+    p("Carter Casey closeup", T.tigers, img("tigers/mask-detail")),
+    p("Goalie mask closeup", T.tigers, img("tigers/mask-tiger-detail")),
+    p("Goalie mask closeup 2", T.tigers, img("tigers/mask-championship-detail")),
+    p("The Rucks", T.tigers, img("tigers/walkout-high-fives")),
+    p("Tigers team store hoodies", T.tigers, img("tigers/merch-hoodies")),
+    p("Tigers team store clappers", T.tigers, img("tigers/merch-clappers")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-01")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-02")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-03")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-04")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-05")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-06")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-07")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-08")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-09")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-10")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-11")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-12")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-13")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-14")),
+    p("New jersey photoshoot", T.tigers, img("tigers/jersey-15")),
+    p("2026 Tigers Training Camp Champions", T.tigers, img("tigers/camp-champions")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-goalie-walkout")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-through-the-glass")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-all-smiles")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-corner-battle")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-one-timer")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-puck-control")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-reading-the-play")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-behind-the-net")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-shot-release")),
+    p("Tigers Training Camp 2026", T.tigers, img("tigers/camp-on-the-move")),
+    pn("Goal celebration", T.bulldogs, img("bulldogs/photo-goal-celebration")),
+    pn("Shaw: follow-through", T.bulldogs, img("bulldogs/photo-shaw-follow-through")),
+    pn("Ready for the faceoff", T.bulldogs, img("bulldogs/photo-faceoff-ready")),
+    pn("Celebrating with the crowd", T.bulldogs, img("bulldogs/photo-glass-celebration")),
+    pn("Goalie: set in the crease", T.bulldogs, img("bulldogs/photo-goalie-set")),
+    pn("Shaw: winding up", T.bulldogs, img("bulldogs/photo-shaw-shot")),
+    pn("Neu: celebration", T.bulldogs, img("bulldogs/photo-neu-celebration")),
+    pn("Alternate captain", T.bulldogs, img("bulldogs/photo-alternate-captain")),
+    pn("Reading the play", T.bulldogs, img("bulldogs/photo-on-the-ice")),
+    pn("Goalie: in the crease", T.bulldogs, img("bulldogs/photo-goalie-crease")),
+    pn("Gear sale: helmets", T.bulldogs, img("bulldogs/photo-gear-helmets")),
+    pn("Gear sale: gold gloves", T.bulldogs, img("bulldogs/photo-gear-gold-gloves")),
+    pn("Gear sale: grey gloves", T.bulldogs, img("bulldogs/photo-gear-grey-gloves")),
+    pn("Gear sale: clearance", T.bulldogs, img("bulldogs/photo-gear-clearance"))
   ],
-  "service:other":          [p("Game notes", T.tigers), p("Press release", T.bisons), p("Community event", T.tigers), p("Media guide", T.tigers), p("Stats package", T.tigers), p("Sponsor spotlight", T.oilers), p("Event poster"), v("Behind the scenes", T.bisons)]
 };
 
 /* "More" page: one section per organization, each a single scrollable row. */
 var MORE = [
-  {name:"Woody's RV World", items:[g("RV Business Top 50 Dealer Awards application", "", img("more/woodys-rv-awards"))]},
-  {name:"Okotoks Oilers", items:[g("Playoffs: Game 1", "", img("more/oilers-playoffs-game-1"))]},
-  {name:"Mavericks Elite Lacrosse Club", items:[g("Milestone: 100 career points", "", img("more/mavericks-100-points"))]},
-  {name:"Heritage Junior Hockey League", items:[g("39th season kickoff", "", img("more/hjhl-39th-season"))]},
-  {name:"Three Angels Poker Chip Run", note:"Volunteer work", items:[g("Event poster", "", img("more/three-angels-poker-run"))]}
+  {name:"Okotoks Oilers", logo:"images/logos/oilers.webp", items:[
+    g("165 points: most career points in team history", "", img("more/oilers-165-points")),
+    g("Playoffs: Game 1", "", img("more/oilers-playoffs-game-1")),
+    g("Fan Appreciation Night", "", img("more/oilers-fan-appreciation"))
+  ]},
+  {name:"Mavericks Elite Lacrosse Club", logo:"images/logos/mavericks.webp", items:[
+    g("Milestone: 100 career points", "", img("more/mavericks-100-points")),
+    g("2024 roster", "", img("more/mavericks-roster")),
+    g("Game day", "", img("more/mavericks-gameday")),
+    g("Weekend preview", "", img("more/mavericks-weekend-preview")),
+    g("2024 schedule release", "", img("more/mavericks-schedule-release")),
+    g("2024 home schedule", "", img("more/mavericks-home-schedule")),
+    g("2024 away schedule", "", img("more/mavericks-away-schedule")),
+    g("Donations to date: goalie development initiative", "", img("more/mavericks-donations-to-date")),
+    g("Online store launch", "", img("more/mavericks-online-store")),
+    g("Photographer needed", "", img("more/mavericks-photographer-needed")),
+    g("Pack the Bull Pen", "", img("more/mavericks-pack-the-bull-pen"))
+  ]},
+  {name:"Heritage Junior Hockey League", logo:"images/logos/hjhl.webp", items:[g("39th season kickoff", "", img("more/hjhl-39th-season"))]},
+  {name:"Three Angels Poker Chip Run", logo:"", note:"Volunteer work", items:[g("Event poster", "", img("more/three-angels-poker-run")), g("Sponsor thank you template", "", img("more/three-angels-sponsor-thank-you"))]},
+  {name:"Personal projects", note:"Personal work", items:[g("Sebastian Aho poster", "", img("more/personal-aho-poster"))]}
 ];
 
 var PATTERN = ["lg","sm","sm","md","md","md","wd","wd"];
@@ -713,18 +923,19 @@ function teamCard(t, i){
     '<span class="go">'+ic("arrow")+'</span></a></li>';
 }
 
+function svcRow(s, i){
+  return '<li class="reveal" style="--d:'+(i*70)+'ms"><a class="team-card svc-row" href="#/service/'+s.slug+'">'+
+    '<span class="num">'+pad(i+1)+'</span>'+
+    '<span class="tc-logo svc-row-icon"><span class="svc-icon">'+ic(s.icon)+'</span></span>'+
+    '<span><span class="tc-name">'+esc(s.name)+'</span></span>'+
+    '<span class="go">'+ic("arrow")+'</span></a></li>';
+}
 function svcCard(s, i){
   return '<a class="svc-card reveal" style="--d:'+(i*70)+'ms" href="#/service/'+s.slug+'">'+
     '<span class="svc-top"><span class="svc-icon">'+ic(s.icon)+'</span><span class="num">'+pad(i+1)+'</span></span>'+
     '<span class="svc-foot"><span><h3>'+esc(s.name)+'</h3></span><span class="go">'+ic("arrow")+'</span></span></a>';
 }
 
-var ROLES = '<dl class="roles">'+
-  '<div><dt>Communications Manager</dt><dd>Medicine Hat Tigers (WHL)</dd></div>'+
-  '<div><dt>Director of Communications &amp; Social Media Manager</dt><dd>CARSTAR Okotoks Bisons</dd></div>'+
-  '<div><dt>Digital Marketing Coordinator</dt><dd>Blackfalds Bulldogs</dd></div>'+
-  '<div><dt>Studio</dt><dd>BLS Media</dd></div>'+
-  '<div><dt>Tools</dt><dd>Adobe Creative Cloud, DaVinci Resolve</dd></div></dl>';
 
 function socials(){
   var real = SOCIAL.filter(function(x){ return x.url && !/^https?:\/\/[^\/]+\/?$/.test(x.url); });
@@ -752,13 +963,13 @@ function homeHTML(){
 
   '<section class="section wrap" id="examples" aria-labelledby="examples-h">'+
     '<div class="section-head reveal"><h2 id="examples-h">Examples</h2><p>Click a menu below to see examples of my work.</p></div>'+
+    '<div class="subsec" id="services" aria-labelledby="services-h">'+
+      '<div class="subhead-row reveal"><h3 class="subhead" id="services-h">Services</h3></div>'+
+      '<ol class="team-list">'+SERVICES.map(svcRow).join("")+'</ol>'+
+    '</div>'+
     '<div class="subsec" id="organizations" aria-labelledby="organizations-h">'+
       '<div class="subhead-row reveal"><h3 class="subhead" id="organizations-h">Organizations</h3></div>'+
       '<ol class="team-list">'+TEAMS.map(teamCard).join("")+'</ol>'+
-    '</div>'+
-    '<div class="subsec" id="services" aria-labelledby="services-h">'+
-      '<div class="subhead-row reveal"><h3 class="subhead" id="services-h">Services</h3><p>Browse my best work by service instead of by organization.</p></div>'+
-      '<div class="svc-grid">'+SERVICES.map(svcCard).join("")+'</div>'+
     '</div>'+
   '</section>'+
 
@@ -767,24 +978,24 @@ function homeHTML(){
       '<div class="about-photo reveal">'+headshot(false)+'</div>'+
       '<div class="about-copy reveal" style="--d:120ms">'+
         '<h2 id="about-h">About</h2>'+
-        '<p>I&rsquo;m Brandon Schinnour, a sports graphic designer and communications professional working in Alberta junior hockey. I run communications for the Medicine Hat Tigers of the WHL and the CARSTAR Okotoks Bisons, handle digital marketing for the Blackfalds Bulldogs, and take on design work through my studio, BLS Media.</p>'+
-        '<p>Day to day that means graphics, video and photography for social, game notes and stats for the press box, and press releases and community events off the ice. Every deliverable ships on the game&rsquo;s schedule, not mine.</p>'+
-        ROLES+socials()+
+        '<p>I&rsquo;m Brandon Schinnour, the Communications Manager for the Medicine Hat Tigers of the WHL. I lead social media strategy, content creation, and digital storytelling across the team&rsquo;s platforms.</p>'+
+        '<p>I have a background in marketing, sports communications and advertising that allows me to do work that I&rsquo;m passionate about to grow fan engagement and bring stories behind the game to life.</p>'+
+        socials()+
       '</div>'+
     '</div>'+
   '</section>'+
 
   '<section class="section wrap" id="contact" aria-labelledby="contact-h">'+
-    '<div class="section-head reveal"><h2 id="contact-h">Contact</h2><p>Tell me about the project: the team, the deadline, and what you need made.</p></div>'+
+    '<div class="section-head reveal"><h2 id="contact-h">Contact</h2></div>'+
     '<form class="cform reveal" id="cform" novalidate>'+
       '<div class="fgrid">'+
         '<label class="field"><span>Name</span><input name="name" autocomplete="name" aria-describedby="err-name"><small class="err" id="err-name" data-err="name"></small></label>'+
         '<label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" inputmode="email" aria-describedby="err-email"><small class="err" id="err-email" data-err="email"></small></label>'+
         '<label class="field span2"><span>Team or organization<em>optional</em></span><input name="org" autocomplete="organization"></label>'+
-        '<fieldset class="field span2"><legend>What do you need?</legend><div class="chips">'+
-          chip("Graphic design","design",true)+chip("Videography","video")+chip("Photography","photo")+chip("Something else","more")+
+        '<fieldset class="field span2"><legend>What do you need?<em>select all that apply</em></legend><div class="chips">'+
+          chip("Graphic design","design")+chip("Photography","photo")+chip("Videography","video")+chip("Something else","more")+
         '</div></fieldset>'+
-        '<label class="field span2"><span>Message</span><textarea name="message" rows="5" placeholder="What are we making, and when does it need to go out?" aria-describedby="err-message"></textarea><small class="err" id="err-message" data-err="message"></small></label>'+
+        '<label class="field span2"><span>Message</span><textarea name="message" rows="5" placeholder="What are we working on?" aria-describedby="err-message"></textarea><small class="err" id="err-message" data-err="message"></small></label>'+
       '</div>'+
       '<div class="form-foot"><button type="submit" class="btn">Send message '+ic("arrow")+'</button><p class="form-status" role="status" aria-live="polite"></p></div>'+
     '</form>'+
@@ -793,7 +1004,7 @@ function homeHTML(){
   '</div>';
 }
 function chip(label, icon, checked){
-  return '<label class="chip"><input type="radio" name="need" value="'+esc(label)+'"'+(checked?' checked':'')+'><span>'+ic(icon)+esc(label)+'</span></label>';
+  return '<label class="chip"><input type="checkbox" name="need" value="'+esc(label)+'"'+(checked?' checked':'')+'><span>'+ic(icon)+esc(label)+'</span></label>';
 }
 
 function findPage(kind, slug){
@@ -813,8 +1024,7 @@ function subHTML(kind, slug){
     '<div class="sweep">'+blob(BLOBS[1],"b1",true)+blob(BLOBS[2],"b2")+'</div>'+
     '<header class="sub-head wrap">'+
       '<button type="button" class="back" data-goto="'+(isTeam?"organizations":"services")+'">'+ic("back")+'All '+(isTeam?"organizations":"services")+'</button>'+
-      '<div class="sub-title reveal">'+logo+'<div><h1>'+esc(it.name)+'</h1><p class="sub-role">'+esc(isTeam?it.role:it.tagline)+'</p></div></div>'+
-      '<p class="sub-blurb reveal" style="--d:100ms">'+esc(isTeam?it.blurb:it.desc)+'</p>'+
+      '<div class="sub-title reveal">'+logo+'<div><h1>'+esc(it.name)+'</h1>'+(isTeam ? '<p class="sub-role">'+esc(it.role)+'</p>' : '')+'</div></div>'+
     '</header>'+
     '<section class="wrap" aria-label="Gallery">'+
       (slug==="more" ? moreHTML() :
@@ -837,9 +1047,9 @@ function masonryTile(item, i){
   var kindLabel = item.kind==="video" ? "video" : "image";
   var club = gal.showClub && item.club ? '<span class="tile-club">'+esc(item.club)+'</span>' : "";
   return '<button type="button" class="tile m reveal" style="--d:'+((i%4)*60)+'ms" data-i="'+i+'" aria-label="'+esc(item.title)+(item.club?", "+esc(item.club):"")+', '+kindLabel+'. Open viewer">'+
-    '<span class="tile-frame'+(item.yt ? ' yt' : '')+'">'+(src ? '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async">' : '<span class="ph">'+ic(item.kind)+'</span>')+
+    '<span class="tile-frame'+(item.yt ? ' yt' : '')+(item.vertical ? ' v' : '')+'">'+(src ? '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async">' : '<span class="ph">'+ic(item.kind)+'</span>')+
     (item.kind==="video" ? '<span class="play-btn">'+ic("play")+'</span>' : '')+'</span>'+
-    '<span class="tile-meta"><span class="tile-title">'+esc(item.title)+'</span>'+club+(item.credit ? '<span class="tile-credit">'+esc(item.credit)+'</span>' : '')+'</span></button>';
+    ((item.notitle && !club && !item.credit) ? '' : '<span class="tile-meta">'+(item.notitle ? '' : '<span class="tile-title">'+esc(item.title)+'</span>')+club+(item.credit ? '<span class="tile-credit">'+esc(item.credit)+'</span>' : '')+'</span>')+'</button>';
 }
 function tileHTML(item, i){
   if(gal.masonry) return masonryTile(item, i);
@@ -870,6 +1080,19 @@ function renderFilters(){
   }).join("");
 }
 
+/* Image shapes (height / width) so columns balance. New images default to 4:5 if not listed. */
+var RATIO = {"tigers/100-career-games":1.25,"tigers/2000-franchise-wins":1.25,"tigers/32-goals-record-tied":1.25,"tigers/33-goals-record":1.25,"tigers/central-division-champions":1.25,"tigers/defenceman-of-the-year":1.25,"tigers/draft-day":1.25,"tigers/drafted":1.25,"tigers/goalie-at-the-bench":0.8,"tigers/goalie-water-spray":1.25,"tigers/graduating-thank-you":1.25,"tigers/mask-championship-detail":1.333,"tigers/mask-detail":1.501,"tigers/mask-tiger-detail":1.333,"tigers/nhl-debut":1.25,"tigers/one-more-day":1.25,"tigers/online-auction":1.25,"tigers/player-of-the-year":1.25,"tigers/playoffs-clinched":1.25,"tigers/pregame-portrait":1.25,"tigers/single-game-tickets":0.562,"tigers/team-canada-u17":1.25,"tigers/team-finland":1.25,"tigers/tigers-in-the-rankings":1.25,"tigers/trade-alert":1.25,"tigers/tunnel-goalie-stretch":1.25,"tigers/tunnel-pregame-huddle":1.25,"tigers/tunnel-walk":1.25,"tigers/walkout-high-fives":0.714,"tigers/warmup-21":0.666,"tigers/warmup-22":0.666,"tigers/warmup-bryzgalov":0.8,"tigers/warmup-pickford":0.666,"tigers/warmup-puck-flip":0.8,"tigers/warmup":0.666,"tigers/whl-opening-week":1.25,"bulldogs/3-stars-away":1.25,"bulldogs/3-stars-home":1.25,"bulldogs/alumni-spotlight":1.25,"bulldogs/birthday":1.25,"bulldogs/canada-day":1.25,"bulldogs/college-night":0.562,"bulldogs/exhibition-schedule":1.25,"bulldogs/final-win-away":1.25,"bulldogs/final-win-home":1.25,"bulldogs/gameday-away":1.25,"bulldogs/gameday-home":1.25,"bulldogs/home-opener":1.25,"bulldogs/january-schedule":1.25,"bulldogs/milestone-100":1.25,"bulldogs/milestone-150":1.25,"bulldogs/monthly-schedule":1.0,"bulldogs/point-streak":1.25,"bulldogs/signed":1.25,"bulldogs/summary-away":1.25,"bulldogs/summary-home":1.25,"bulldogs/thank-you":1.0,"bulldogs/theme-night-schedule":1.25,"bulldogs/theme-nights-month":1.25,"bulldogs/win-streak":1.25,"bisons/2000-followers":1.25,"bisons/50-points":1.25,"bisons/advance-to-finals":1.25,"bisons/advances-championship":1.25,"bisons/back-to-back-champions":1.25,"bisons/best-gaa":1.0,"bisons/bisons-vs-generals":1.25,"bisons/brand-guide":1.294,"bisons/exhibition-flyers":1.0,"bisons/final-4-1":1.25,"bisons/final-7-0":1.0,"bisons/gameday":1.25,"bisons/january-schedule":1.0,"bisons/jersey-auction":1.274,"bisons/playoff-gameday":1.0,"bisons/presidents-trophy":1.25,"bisons/provincial-champions":1.25,"bisons/provincials-schedule":1.0,"bisons/season-opener":1.0,"bisons/semifinals-matchup":1.0,"bisons/series-preview":1.0,"bisons/thank-you-tainton":1.25,"bisons/three-peat-champions":1.25,"bisons/top-goalie":1.25,"bisons/weekend-preview":1.0,"bisons/welcome-back-coach":1.0,"bisons/win-series":1.25,"more/hjhl-39th-season":1.25,"more/mavericks-100-points":1.25,"more/mavericks-away-schedule":1.0,"more/mavericks-donations-to-date":1.0,"more/mavericks-gameday":1.0,"more/mavericks-home-schedule":1.0,"more/mavericks-online-store":1.0,"more/mavericks-pack-the-bull-pen":1.0,"more/mavericks-photographer-needed":1.0,"more/mavericks-roster":1.0,"more/mavericks-schedule-release":1.0,"more/mavericks-weekend-preview":1.0,"more/oilers-165-points":1.0,"more/oilers-fan-appreciation":1.0,"more/oilers-playoffs-game-1":1.0,"more/three-angels-poker-run":1.294,"more/three-angels-sponsor-thank-you":1.0,"more/woodys-canada-day":1.0,"more/woodys-impact-rv-collision-flyer":1.294,"more/woodys-road-show-accessorize":1.0,"more/woodys-road-show-drive-away":1.0,"more/woodys-road-show-featuring":1.0,"more/woodys-road-show-monthly-payments":1.0,"more/woodys-road-show-on-now":1.0,"more/woodys-rv-awards":1.294,"more/woodys-saskatoon-mobile-truck":1.348,"more/woodys-solera-banner":0.281,"more/woodys-trade-in-banner":0.281,"more/woodys-trade-in-square":1.0,"more/woodys-weekends-accessorize":1.0,"more/woodys-wholesale-savings-card-2":0.643,"more/woodys-wholesale-savings-card":0.643,"tigers/merch-hoodies":0.563,"tigers/merch-clappers":0.563,"tigers/ring-nameplate":1.333,"tigers/ring-side-profile":1.333,"tigers/ring-crest":1.333,"tigers/ring-trophy-side":1.333,"tigers/camp-champions":0.666,"tigers/camp-puck-control":0.667,"tigers/camp-reading-the-play":0.666,"tigers/camp-corner-battle":0.666,"tigers/camp-behind-the-net":0.666,"tigers/camp-shot-release":0.666,"tigers/camp-through-the-glass":0.666,"tigers/camp-one-timer":0.666,"tigers/camp-goalie-walkout":1.501,"tigers/camp-all-smiles":1.501,"tigers/camp-on-the-move":0.666,"more/personal-aho-poster":1.294,"bulldogs/photo-shaw-follow-through":0.666,"bulldogs/photo-faceoff-ready":0.666,"bulldogs/photo-goalie-set":0.666,"bulldogs/photo-goal-celebration":0.666,"bulldogs/photo-alternate-captain":0.666,"bulldogs/photo-shaw-shot":0.666,"bulldogs/photo-neu-celebration":0.666,"bulldogs/photo-glass-celebration":0.666,"bulldogs/photo-on-the-ice":0.666,"bulldogs/photo-goalie-crease":0.666,"bulldogs/photo-gear-helmets":0.666,"bulldogs/photo-gear-gold-gloves":0.666,"bulldogs/photo-gear-grey-gloves":0.666,"bulldogs/photo-gear-clearance":0.666,"tigers/jersey-01":1.4,"tigers/jersey-02":1.4,"tigers/jersey-03":1.4,"tigers/jersey-04":1.4,"tigers/jersey-05":1.4,"tigers/jersey-06":1.4,"tigers/jersey-07":1.4,"tigers/jersey-08":1.4,"tigers/jersey-09":1.4,"tigers/jersey-10":0.714,"tigers/jersey-11":0.714,"tigers/jersey-12":0.714,"tigers/jersey-13":0.714,"tigers/jersey-14":1.4,"tigers/jersey-15":0.714};
+/* Place each tile in the currently shortest column (first row stays in order). */
+function estH(it){ if(it.yt) return it.vertical ? 1.78 : 0.5625; var k = (it.src||"").replace(/^images\//,"").replace(/\.[a-z0-9]+$/i,""); return RATIO[k] || 1.25; }
+function distribute(items, n, make){
+  var cols = [], h = [];
+  for(var c=0;c<n;c++){ cols.push([]); h.push(0); }
+  items.forEach(function(it, i){
+    var k = 0; for(var c=1;c<n;c++) if(h[c] < h[k] - 0.001) k = c;
+    cols[k].push(make(it, i)); h[k] += estH(it) + 0.12;
+  });
+  return cols;
+}
 function masonryCols(){ var w = window.innerWidth; return w > 1100 ? 4 : w > 720 ? 3 : 2; }
 window.addEventListener("resize", function(){
   if(!document.getElementById("gallery") || masonryCols() === gal.cols) return;
@@ -881,9 +1104,7 @@ function renderGrid(){
   gal.masonry = gal.list.length > 0 && gal.list.every(function(x){ return x.kind==="photo" ? !!x.src : !!x.poster; });
   g.classList.toggle("masonry", gal.masonry);
   if(gal.masonry){
-    var n = masonryCols(), cols = [];
-    for(var c=0;c<n;c++) cols.push([]);
-    gal.list.forEach(function(it, i){ cols[i % n].push(tileHTML(it, i)); });
+    var n = masonryCols(), cols = distribute(gal.list, n, tileHTML);
     gal.cols = n;
     g.innerHTML = cols.map(function(c){ return '<div class="mcol">'+c.join("")+'</div>'; }).join("");
     observeReveals(g);
@@ -925,9 +1146,8 @@ function renderSections(focusCat){
   g.innerHTML = SECTIONS.map(function(sd){
     var c = sd[0], items = gal.items.filter(function(x){ return catOf(x)===c; });
     if(!items.length) return "";
-    var open = !!gal.open[c], shown = open ? items : items.slice(0, n), cols = [];
-    for(var k=0;k<n;k++) cols.push([]);
-    shown.forEach(function(it, i){ cols[i % n].push(masonryTile(it, i)); });
+    var open = !!gal.open[c], shown = open ? items : items.slice(0, n);
+    var cols = distribute(shown, n, masonryTile);
     var extra = items.length - n;
     return '<section class="gsec" data-cat="'+c+'" id="gsec-'+c+'" aria-labelledby="gsec-'+c+'-h">'+
       '<div class="gsec-head reveal"><h2 id="gsec-'+c+'-h">'+sd[1]+'</h2><span class="gsec-count">'+items.length+' piece'+(items.length===1?'':'s')+'</span></div>'+
@@ -972,7 +1192,7 @@ function moreHTML(){
     if(!g.items.some(isReal)) return "";
     var hid = "mg-"+gi;
     return '<section class="more-group reveal" data-g="'+gi+'" aria-labelledby="'+hid+'">'+
-      '<div class="mg-head"><div><h2 id="'+hid+'">'+esc(g.name)+'</h2><span class="mg-count">'+(g.note ? esc(g.note) : g.items.length+' piece'+(g.items.length===1?'':'s'))+'</span></div>'+
+      '<div class="mg-head"><div class="mg-id">'+(g.logo ? '<span class="mg-logo"><img src="'+esc(g.logo)+'" alt=""></span>' : '')+'<div><h2 id="'+hid+'">'+esc(g.name)+'</h2><span class="mg-count">'+(g.note ? esc(g.note) : g.items.length+' piece'+(g.items.length===1?'':'s'))+'</span></div></div>'+
       '<div class="mg-arrows"><button type="button" class="icon-btn" data-dir="-1" aria-label="Scroll '+esc(g.name)+' back">'+ic("prev")+'</button><button type="button" class="icon-btn" data-dir="1" aria-label="Scroll '+esc(g.name)+' forward">'+ic("next")+'</button></div></div>'+
       '<div class="rail'+(g.items.every(isReal) ? ' real' : '')+'" tabindex="0" aria-label="'+esc(g.name)+' work, scrolls sideways">'+g.items.map(railTile).join("")+'</div>'+
     '</section>';
@@ -980,7 +1200,7 @@ function moreHTML(){
   '<p class="gal-note" style="margin-top:28px">Select any piece to view it larger.</p>';
 }
 function railTile(item, i){
-  if(isReal(item)) return masonryTile(item, i).replace(/ class="tile m reveal"/, ' class="tile m"').replace(/ style="--d:[^"]*"/, "");
+  if(isReal(item)) return masonryTile(item, i).replace(/ class="tile m reveal"/, ' class="tile m"').replace(/ style="--d:[^"]*"/, "").replace(' loading="lazy"', '');
   gal.masonry = false;
   return tileHTML(item, i).replace(/ class="tile s-[a-z]+ reveal"/, ' class="tile"').replace(/ style="--d:[^"]*"/, "");
 }
@@ -1005,6 +1225,7 @@ function bindMore(){
       gal.list = g.items; gal.showClub = false;
       openLB(parseInt(t.getAttribute("data-i"),10), t);
     });
+    rail.querySelectorAll("img").forEach(function(im){ if(!im.complete) im.addEventListener("load", update); });
     update();
   });
 }
@@ -1024,6 +1245,7 @@ function lbShow(i){
   var item = gal.list[lbIndex], frame = document.getElementById("lbFrame"), html;
   frame.classList.toggle("fit", item.kind==="photo" && !!item.src);
   frame.classList.toggle("yt", !!item.yt);
+  frame.classList.toggle("v", !!item.vertical);
   if(item.yt){
     var watch = "https://www.youtube.com/watch?v="+encodeURIComponent(item.yt);
     html = EMBED_VIDEO
@@ -1035,7 +1257,7 @@ function lbShow(i){
   else html = '<div class="ph">'+ic(item.kind)+'<span>'+(item.kind==="photo"?"Image coming soon":"Video coming soon")+'</span></div>';
   frame.innerHTML = html;
   document.getElementById("lbCount").textContent = pad(lbIndex+1)+" / "+pad(n);
-  document.getElementById("lbTitle").textContent = item.title;
+  document.getElementById("lbTitle").textContent = item.notitle ? "" : item.title;
   document.getElementById("lbClub").textContent = [item.club, item.credit].filter(Boolean).join(", ");
 }
 function openLB(i, from){ lbReturn = from || null; lbShow(i); if(typeof lb.showModal==="function") lb.showModal(); else lb.setAttribute("open",""); document.getElementById("lbClose").focus(); }
@@ -1075,7 +1297,7 @@ function bindForm(){
     Object.keys(checks).forEach(function(k){ if(!check(k) && !firstBad) firstBad = f.elements[k]; });
     if(firstBad){ firstBad.focus(); return; }
     var data = {name:f.elements.name.value.trim(), email:f.elements.email.value.trim(), org:f.elements.org.value.trim(),
-      need:(f.querySelector('input[name="need"]:checked')||{}).value||"", message:f.elements.message.value.trim()};
+      need:[].map.call(f.querySelectorAll('input[name="need"]:checked'), function(x){ return x.value; }).join(", "), message:f.elements.message.value.trim()};
     var status = f.querySelector(".form-status"), btn = f.querySelector('button[type="submit"]');
     if(!CONTACT_ENDPOINT && CONTACT_EMAIL){
       var body = data.message + "\n\n" + data.name + (data.org ? ", " + data.org : "") + "\n" + data.email;
