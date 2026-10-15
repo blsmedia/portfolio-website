@@ -534,9 +534,10 @@ function y(title, club, id, credit, poster){
 }
 /* ys(...) -> same as y(...) but for a vertical YouTube Short */
 function ys(title, club, id, credit, poster){ var o = y(title, club, id, credit, poster); o.vertical = true; return o; }
-/* ysl: same as ys, but opens on YouTube instead of playing on the site (use when embedding is blocked) */
-function ysl(title, club, id, credit, poster){ var o = ys(title, club, id, credit, poster); o.ext = true; return o; }
-function ytLink(item){ return item.vertical ? "https://www.youtube.com/shorts/"+encodeURIComponent(item.yt) : "https://www.youtube.com/watch?v="+encodeURIComponent(item.yt); }
+/* ysl: same as ys, but opens on YouTube instead of playing on the site (use when embedding is blocked).
+   Add a full link at the end to open somewhere else instead, e.g. a Facebook or Instagram post. */
+function ysl(title, club, id, credit, poster, link){ var o = ys(title, club, id, credit, poster); o.ext = true; if(link) o.href = link; return o; }
+function ytLink(item){ return item.href ? item.href : item.vertical ? "https://www.youtube.com/shorts/"+encodeURIComponent(item.yt) : "https://www.youtube.com/watch?v="+encodeURIComponent(item.yt); }
 
 var GALLERY = {
   "org:tigers": [
@@ -609,7 +610,7 @@ var GALLERY = {
     p("Tigers Training Camp 2026", "", img("tigers/camp-shot-release")),
     p("Tigers Training Camp 2026", "", img("tigers/camp-on-the-move")),
     ys("Liam & Markus Ruck hype video", "", "CKWIH0rpjdA", "edited-some-shot"),
-    ysl("Championship ring reveal", "", "1SEwXH_8PVM", "edited-some-shot"),
+    ysl("Championship ring reveal", "", "1SEwXH_8PVM", "edited-some-shot", "", "https://www.facebook.com/watch/?v=2094279227995204"),
     ys("Goalie mask reveal", "", "HSPAFGotAMs", "shot-edited"),
     y("2026 playoff hype video", "", "npiEUs-_MR8", "edited-some-shot"),
     y("2026 Eastern Conference Final hype video", "", "NnWmC2i0R9M", "edited-some-shot"),
@@ -617,7 +618,7 @@ var GALLERY = {
     y("Training camp: Liam Ruck OT winner", "", "9gawrds2dD8", "shot-edited"),
     y("Training camp: Michael Kuzik goal", "", "0ozRgq6OIno", "shot-edited"),
     ys("Shaeffer Gordon-Carroll hype video", "", "3OQVBVLP4cM", "edited-some-shot"),
-    ys("Pickford hype video", "", "xsLY2shM-yg", "edited-some-shot"),
+    ys("Pickford & Woo hype video", "", "xsLY2shM-yg", "edited-some-shot"),
     ys("Playoffs: Pickford OT winner, Round 2 Game 2", "", "AvBJxlcUXS4", "shot-edited"),
     ys("Pucks & Paws", "", "xqEkbk5RjZ8", "shot-edited"),
     y("Training camp: Ruck brothers hit the post", "", "tzG7kbxN5pk", "shot-edited")
@@ -741,16 +742,16 @@ var GALLERY = {
   ],
   "service:videography": [
     ys("Liam & Markus Ruck hype video", T.tigers, "CKWIH0rpjdA", "edited-some-shot"),
-    ysl("Championship ring reveal", T.tigers, "1SEwXH_8PVM", "edited-some-shot"),
-    ys("Goalie mask reveal", T.tigers, "HSPAFGotAMs", "shot-edited"),
+    ysl("Championship ring reveal", T.tigers, "1SEwXH_8PVM", "edited-some-shot", "", "https://www.facebook.com/watch/?v=2094279227995204"),
+    ys("Pickford & Woo hype video", T.tigers, "xsLY2shM-yg", "edited-some-shot"),
+    ys("Shaeffer Gordon-Carroll hype video", T.tigers, "3OQVBVLP4cM", "edited-some-shot"),
     y("2026 playoff hype video", T.tigers, "npiEUs-_MR8", "edited-some-shot"),
     y("2026 Eastern Conference Final hype video", T.tigers, "NnWmC2i0R9M", "edited-some-shot"),
     y("3 Rucks connect for a goal", T.tigers, "Ul3B8PKw6o4", "shot-edited"),
+    ys("Playoffs: Pickford OT winner, Round 2 Game 2", T.tigers, "AvBJxlcUXS4", "shot-edited"),
+    ys("Goalie mask reveal", T.tigers, "HSPAFGotAMs", "shot-edited"),
     y("Training camp: Liam Ruck OT winner", T.tigers, "9gawrds2dD8", "shot-edited"),
     y("Training camp: Michael Kuzik goal", T.tigers, "0ozRgq6OIno", "shot-edited"),
-    ys("Shaeffer Gordon-Carroll hype video", T.tigers, "3OQVBVLP4cM", "edited-some-shot"),
-    ys("Pickford hype video", T.tigers, "xsLY2shM-yg", "edited-some-shot"),
-    ys("Playoffs: Pickford OT winner, Round 2 Game 2", T.tigers, "AvBJxlcUXS4", "shot-edited"),
     ys("Pucks & Paws", T.tigers, "xqEkbk5RjZ8", "shot-edited"),
     y("Training camp: Ruck brothers hit the post", T.tigers, "tzG7kbxN5pk", "shot-edited"),
     y("2024 HJHL Finals hype video", T.bisons, "g2BjEF5bldQ", "edited-some-shot"),
@@ -1253,7 +1254,7 @@ function lbShow(i){
     var watch = ytLink(item);
     html = (EMBED_VIDEO && !item.ext)
       ? '<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(item.yt)+'?autoplay=1&rel=0&modestbranding=1" title="'+esc(item.title)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>'
-      : '<div class="yt-out"><img src="'+esc(item.poster)+'" alt=""><a class="btn" href="'+watch+'" target="_blank" rel="noopener noreferrer">Watch on YouTube '+ic("out")+'<span class="sr-only"> (opens in a new tab)</span></a></div>';
+      : '<div class="yt-out"><img src="'+esc(item.poster)+'" alt=""><a class="btn" href="'+watch+'" target="_blank" rel="noopener noreferrer">Watch on '+(/facebook\.com/.test(watch)?"Facebook":/instagram\.com/.test(watch)?"Instagram":/tiktok\.com/.test(watch)?"TikTok":"YouTube")+' '+ic("out")+'<span class="sr-only"> (opens in a new tab)</span></a></div>';
   } else
   if(item.kind==="photo" && item.src) html = '<img src="'+esc(item.src)+'" alt="'+esc(item.title)+'">';
   else if(item.kind==="video" && item.src) html = '<video controls preload="none" playsinline src="'+esc(item.src)+'"'+(item.poster?' poster="'+esc(item.poster)+'"':'')+'></video>';
